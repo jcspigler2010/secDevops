@@ -74,15 +74,15 @@ node {
             currentBuild.result = 'FAILURE'
             }
    }
-//
-   // stage('Testing Ansible Playbooks') {
-   //    //sh "/usr/local/bin/ansible-lint myLab.yaml"
-   //    sh "ansible-review myVSConfig.yaml"
-   //    sh "ansible-review importPolicy.yaml"
-   //    sh "ansible-review exportPolicy.yaml"
-   //    sh "ansible-review importVulnerabilities.yaml"
-   //    sh "ansible-review createASMPolicy.yaml"
-   // }
+
+   stage('Testing Ansible Playbooks') {
+      //sh "/usr/local/bin/ansible-lint myLab.yaml"
+      sh "ansible-review myVSConfig.yaml"
+      sh "ansible-review importPolicy.yaml"
+      sh "ansible-review exportPolicy.yaml"
+      sh "ansible-review importVulnerabilities.yaml"
+      sh "ansible-review createASMPolicy.yaml"
+   }
 //
 //    stage('Build in QA') {
 //             // Request IP Address for IPAM
