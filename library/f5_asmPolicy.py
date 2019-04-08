@@ -37,7 +37,7 @@ class BigIpCommon(object):
         self._hasParent = module.params.get('hasParent')
         self._virtual = module.params.get('virtual')
         self._parentPolicyName = module.params.get('parentPolicyName')
-		self._policyTemplate = module.params.get('policyTemplate')
+		# self._policyTemplate = module.params.get('policyTemplate')
         self._appLang = module.params.get('lang')
         self._enforceMode = module.params.get('enforcementMode')
         self._validate_certs = module.params.get('validate_certs')
@@ -53,23 +53,23 @@ class BigIpRest(BigIpCommon):
 
 	if self._hasParent == 'false':
 		self._payload = {
-	            	"name": self._name, 
+	            	"name": self._name,
             		"description": self._description,
             		"partition": self._partition,
             		"hasParent": self._hasParent,
 	    			"templateReference": self._policyTemplate,
-	    			"virtualServers": self._virtualServers, 
+	    			"virtualServers": self._virtualServers,
             		"applicationLanguage": self._appLang,
             		"enforcementMode": self._enforceMode
         	}
 	else:
 		self._payload = {
-	            	"name": self._name, 
+	            	"name": self._name,
              		"description": self._description,
             		"partition": self._partition,
             		"hasParent": self._hasParent,
 	    			"parentPolicyName": self._parentPolicyName,
-	    			"virtualServers": self._virtualServers, 
+	    			"virtualServers": self._virtualServers,
             		"applicationLanguage": self._appLang,
             		"enforcementMode": self._enforceMode
         	}
@@ -133,7 +133,7 @@ def main():
             lang=dict(default='utf-8', choices=['utf-8', 'western']),
             enforcementMode=dict(default='blocking', choices=['blocking', 'transparent']),
             user=dict(
-		    required=True, 
+		    required=True,
 		    aliases=['username'],
 	    	    fallback=(env_fallback, ['F5_USER'])
 	    	),
@@ -156,7 +156,7 @@ def main():
     asmpolicy = obj.run()
     if asmpolicy:
         changed = True
- 
+
     module.exit_json(changed=changed, policy=asmpolicy)
 
 
@@ -165,5 +165,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-
