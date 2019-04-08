@@ -69,7 +69,7 @@
             name: "{{ appName }}_SSLProfile"
             side: "client"
             parent: "clientssl"
-            cert: "{{ appName }}.crt"
-            key: "{{ appName }}.key"
+            cert: "{{ appName }}"
+            key: "{{ appName }}"
         delegate_to: localhost
         register: result
