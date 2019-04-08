@@ -199,16 +199,16 @@ node {
         sh "echo start >> ${env.BUILD_ID}_dast.w3af"
         sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
    }
-//
-//    stage('Crawling & Vulnerability Scan') {
-//         // Crawling
-//         //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
-//         sh "wget --no-check-certificate --bind-address=10.100.26.252 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
-//         sh "wget --no-check-certificate --bind-address=10.100.26.252 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
-//
-//         // Vulnerability Assessment
-//         sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
-//    }
+
+   stage('Crawling & Vulnerability Scan') {
+        // Crawling
+        //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
+        sh "wget --no-check-certificate --bind-address=10.100.26.252 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
+        sh "wget --no-check-certificate --bind-address=10.100.26.252 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
+
+        // Vulnerability Assessment
+        sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
+   }
 //
 //    //stage('2nd Approval') {
 //    //   input 'Proceed to Production?'
