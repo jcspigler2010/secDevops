@@ -75,89 +75,89 @@ node {
             }
    }
 
-   stage('Testing Ansible Playbooks') {
-      //sh "/usr/local/bin/ansible-lint myLab.yaml"
-      sh "ansible-review myVSConfig.yaml"
-      sh "ansible-review importPolicy.yaml"
-      sh "ansible-review exportPolicy.yaml"
-      sh "ansible-review importVulnerabilities.yaml"
-      sh "ansible-review createASMPolicy.yaml"
+   // stage('Testing Ansible Playbooks') {
+   //    //sh "/usr/local/bin/ansible-lint myLab.yaml"
+   //    sh "ansible-review myVSConfig.yaml"
+   //    sh "ansible-review importPolicy.yaml"
+   //    sh "ansible-review exportPolicy.yaml"
+   //    sh "ansible-review importVulnerabilities.yaml"
+   //    sh "ansible-review createASMPolicy.yaml"
+   // }
+//
+   stage('Build in QA') {
+            // Request IP Address for IPAM
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+              ansiblePlaybook(
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'getIP.yaml',
+                limit: 'ipam',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                        user: USERNAME,
+                        password: PASSWORD,
+                        fqdn: fqdn,
+                        outputFile: "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip",
+                        member: member
+              ])
+            }
+
+            // Record the VS IP Address
+            env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
+
+            // Create LB Config
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+               ansiblePlaybook(
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'importCrypto.yaml',
+                    limit: 'qa:&$zone',
+                    extras: '-vvv',
+                    sudoUser: null,
+                    extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName
+                ])
+            }
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+              ansiblePlaybook(
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'myVSConfig.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName,
+                        vsIP: qaIP,
+                        member: member
+              ])
+            }
+
+          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            ansiblePlaybook(
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'createASMPolicy.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName
+                ])
+          }
+
    }
-//
-//    stage('Build in QA') {
-//             // Request IP Address for IPAM
-//             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//               ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'getIP.yaml',
-//                 limit: 'ipam',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                         user: USERNAME,
-//                         password: PASSWORD,
-//                         fqdn: fqdn,
-//                         outputFile: "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip",
-//                         member: member
-//               ])
-//             }
-//
-//             // Record the VS IP Address
-//             env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
-//
-//             // Create LB Config
-//             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//                ansiblePlaybook(
-//                     colorized: true,
-//                     inventory: 'hosts.ini',
-//                     playbook: 'importCrypto.yaml',
-//                     limit: 'qa:&$zone',
-//                     extras: '-vvv',
-//                     sudoUser: null,
-//                     extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         fqdn: fqdn,
-//                         appName: appName
-//                 ])
-//             }
-//
-//             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//               ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'myVSConfig.yaml',
-//                 limit: 'qa:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         fqdn: fqdn,
-//                         appName: appName,
-//                         vsIP: qaIP,
-//                         member: member
-//               ])
-//             }
-//
-//           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//             ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'createASMPolicy.yaml',
-//                 limit: 'qa:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         fqdn: fqdn,
-//                         appName: appName
-//                 ])
-//           }
-//
-//    }
 //
 //    //stage('1st Approval') {
 //    //   input 'Proceed to Intensive tests in QA?'
