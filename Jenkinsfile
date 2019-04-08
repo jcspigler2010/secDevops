@@ -57,7 +57,7 @@ node {
         sh "echo $key > ${env.BUILD_ID}.key.tmp"
         sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
 
-        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 2' | awk '/END\$/ { printf(\"%s \", \$0); next } 2' |  tee -a ${appName}.key"
+        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 3' | awk '/END\$/ { printf(\"%s \", \$0); next } 3' |  tee -a ${appName}.key"
         sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
 
         // Verify if Key and Certificate modulus match
