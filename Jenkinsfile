@@ -62,11 +62,11 @@ node {
 
         // Verify if Key and Certificate modulus match
         def cert_mod = sh (
-                script: "openssl x509 -noout -modulus -in ${env.BUILD_ID}.cert",
+                script: "openssl x509 -noout -modulus -in ${appName}.cert",
                 returnStatus: true
             ) == 0
         def key_mod = sh (
-                script: "openssl rsa -noout -modulus -in ${env.BUILD_ID}.key",
+                script: "openssl rsa -noout -modulus -in ${appName}.key",
                 returnStatus: true
             ) == 0
         if( "${cert_mod}" != "${key_mod}" ) {
