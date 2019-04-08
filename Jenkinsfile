@@ -47,6 +47,8 @@ node {
             echo "Data Format: $dataFormat"
             echo "Data_Format: ${dataFormat}"
 
+            env.qaIP = params.vsIP
+
             // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             //     env.userIPAM = USERNAME
             //     env.passIPAM = PASSWORD
@@ -86,25 +88,25 @@ node {
 //
    stage('Build in QA') {
             // Request IP Address for IPAM
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-              ansiblePlaybook(
-                colorized: true,
-                inventory: 'hosts.ini',
-                playbook: 'getIP.yaml',
-                limit: 'ipam',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                        user: USERNAME,
-                        password: PASSWORD,
-                        fqdn: fqdn,
-                        outputFile: "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip",
-                        member: member
-              ])
-            }
+            // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            //   ansiblePlaybook(
+            //     colorized: true,
+            //     inventory: 'hosts.ini',
+            //     playbook: 'getIP.yaml',
+            //     limit: 'ipam',
+            //     extras: '-vvv',
+            //     sudoUser: null,
+            //     extraVars: [
+            //             user: USERNAME,
+            //             password: PASSWORD,
+            //             fqdn: fqdn,
+            //             outputFile: "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip",
+            //             member: member
+            //   ])
+            // }
 
             // Record the VS IP Address
-            env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
+            // env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
 
             // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
