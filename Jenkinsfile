@@ -57,16 +57,16 @@ node {
         sh "echo $key > ${env.BUILD_ID}.key.tmp"
         sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
 
-        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 3' | awk '/END\$/ { printf(\"%s \", \$0); next } 3' |  tee -a ${appName}.key"
-        sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
+        // sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
+        // sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
 
         // Verify if Key and Certificate modulus match
         def cert_mod = sh (
-                script: "openssl x509 -noout -modulus -in ${appName}.cert",
+                script: "openssl x509 -noout -modulus -in ${env.BUILD_ID}.cert",
                 returnStatus: true
             ) == 0
         def key_mod = sh (
-                script: "openssl rsa -noout -modulus -in ${appName}.key",
+                script: "openssl rsa -noout -modulus -in ${env.BUILD_ID}.key",
                 returnStatus: true
             ) == 0
         if( "${cert_mod}" != "${key_mod}" ) {
