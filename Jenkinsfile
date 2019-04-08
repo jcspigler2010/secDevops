@@ -57,8 +57,7 @@ node {
         sh "echo $key > ${env.BUILD_ID}.key.tmp"
         sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
 
-        // sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
-        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
+        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
         sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
 
         // Verify if Key and Certificate modulus match
@@ -76,14 +75,14 @@ node {
             }
    }
 //
-   stage('Testing Ansible Playbooks') {
-      //sh "/usr/local/bin/ansible-lint myLab.yaml"
-      sh "/usr/local/bin/ansible-review myVSConfig.yaml"
-      sh "/usr/local/bin/ansible-review importPolicy.yaml"
-      sh "/usr/local/bin/ansible-review exportPolicy.yaml"
-      sh "/usr/local/bin/ansible-review importVulnerabilities.yaml"
-      sh "/usr/local/bin/ansible-review createASMPolicy.yaml"
-   }
+   // stage('Testing Ansible Playbooks') {
+   //    //sh "/usr/local/bin/ansible-lint myLab.yaml"
+   //    sh "ansible-review myVSConfig.yaml"
+   //    sh "ansible-review importPolicy.yaml"
+   //    sh "ansible-review exportPolicy.yaml"
+   //    sh "ansible-review importVulnerabilities.yaml"
+   //    sh "ansible-review createASMPolicy.yaml"
+   // }
 //
 //    stage('Build in QA') {
 //             // Request IP Address for IPAM
