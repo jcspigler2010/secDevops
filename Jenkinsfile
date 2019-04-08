@@ -2,26 +2,26 @@
 
 import groovy.json.JsonOutput
 
-def slackNotificationChannel = "#tests"     
+// def slackNotificationChannel = "#ci_cd_pipelinetesting"
 
-def notifySlack(text, channel, attachments) {
-    def slackURL = "https://hooks.slack.com/services/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"
-    def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
-
-    def payload = JsonOutput.toJson([text: text,
-        channel: "#tests",
-        username: "webhookbot",
-        icon_url: jenkinsIcon
-    ])
-
-    sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
-}
+// def notifySlack(text, channel, attachments) {
+//     def slackURL = "https://hooks.slack.com/services/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"
+//     def jenkinsIcon = 'https://wiki.jenkins-ci.org/download/attachments/2916393/logo.png'
+//
+//     def payload = JsonOutput.toJson([text: text,
+//         channel: "#tests",
+//         username: "webhookbot",
+//         icon_url: jenkinsIcon
+//     ])
+//
+//     sh "curl -X POST --data-urlencode \'payload=${payload}\' ${slackURL}"
+// }
 
 
 node {
-   stage('Preparation') { 
-            git 'https://github.com/fchmainy/secDevops.git'   
-       
+   stage('Preparation') {
+            git 'https://github.com/jcspigler2010/secDevops.git'
+
             // Setting up environment variables
             echo "setting up variables..."
             env.zone = params.zones
@@ -43,7 +43,7 @@ node {
             env.app_pass = params.passwordField
             env.checkString = params.checkString
             env.dataFormat = params.dataFormat
-       
+
             echo "Data Format: $dataFormat"
             echo "Data_Format: ${dataFormat}"
 
@@ -52,14 +52,14 @@ node {
                 env.passIPAM = PASSWORD
             }
    }
-   
+
    stage('certificate validation') {
         sh "echo $key > ${env.BUILD_ID}.key.tmp"
         sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
-              
+
         sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
         sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
-      
+
         // Verify if Key and Certificate modulus match
         def cert_mod = sh (
                 script: "openssl x509 -noout -modulus -in ${appName}.cert",
@@ -73,8 +73,8 @@ node {
             echo '[FAILURE] Failed to build'
             currentBuild.result = 'FAILURE'
             }
-   }  
-    
+   }
+
    stage('Testing Ansible Playbooks') {
       //sh "/usr/local/bin/ansible-lint myLab.yaml"
       sh "/usr/local/bin/ansible-review myVSConfig.yaml"
@@ -83,14 +83,14 @@ node {
       sh "/usr/local/bin/ansible-review importVulnerabilities.yaml"
       sh "/usr/local/bin/ansible-review createASMPolicy.yaml"
    }
-    
+
    stage('Build in QA') {
             // Request IP Address for IPAM
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
               ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'getIP.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'getIP.yaml',
                 limit: 'ipam',
                 extras: '-vvv',
                 sudoUser: null,
@@ -102,16 +102,16 @@ node {
                         member: member
               ])
             }
-       
+
             // Record the VS IP Address
-            env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip" 
-            
-            // Create LB Config 
+            env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
+
+            // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
-                    colorized: true, 
-                    inventory: 'hosts.ini', 
-                    playbook: 'importCrypto.yaml', 
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'importCrypto.yaml',
                     limit: 'qa:&$zone',
                     extras: '-vvv',
                     sudoUser: null,
@@ -122,12 +122,12 @@ node {
                         appName: appName
                 ])
             }
-                
+
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
               ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'myVSConfig.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'myVSConfig.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -140,12 +140,12 @@ node {
                         member: member
               ])
             }
-                          
+
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'createASMPolicy.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'createASMPolicy.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -156,14 +156,14 @@ node {
                         appName: appName
                 ])
           }
-       
+
    }
-   
+
    //stage('1st Approval') {
    //   input 'Proceed to Intensive tests in QA?'
    //}
-        
-  stage('Prepare Crawling and DAST') { 
+
+  stage('Prepare Crawling and DAST') {
         //1. Convert the dataformat line so it can used by wget for crawling
         env.wget_dataFormat = sh (
          script: "echo 'username=%U&password=%P&Login=Login' | sed 's/%U/${app_user}/g' | sed 's/%P/${app_pass}/g'",
@@ -196,14 +196,14 @@ node {
         sh "echo cleanup >> ${env.BUILD_ID}_dast.w3af"
         sh "echo start >> ${env.BUILD_ID}_dast.w3af"
         sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
-   } 
-    
+   }
+
    stage('Crawling & Vulnerability Scan') {
         // Crawling
         //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
         sh "wget --no-check-certificate --bind-address=10.100.26.252 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
         sh "wget --no-check-certificate --bind-address=10.100.26.252 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
-     
+
         // Vulnerability Assessment
         sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
    }
@@ -215,9 +215,9 @@ node {
    stage('Export WAF Policy and resolve vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'removeASMWildcard.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'removeASMWildcard.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -227,9 +227,9 @@ node {
                     appName: appName
                 ])
              ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'importVulnerabilities.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'importVulnerabilities.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -241,9 +241,9 @@ node {
                     buildId: "${env.BUILD_ID}"
             ])
             ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'exportPolicy.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'exportPolicy.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -254,9 +254,9 @@ node {
                     appName: appName
                 ])
             ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'importPolicy.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'importPolicy.yaml',
                 limit: 'prod:&$zone',
                 extras: '-vvv',
                 sudoUser: null,
@@ -273,9 +273,9 @@ node {
             // Request IP Address for IPAM
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
               ansiblePlaybook(
-                colorized: true, 
-                inventory: 'hosts.ini', 
-                playbook: 'getIP.yaml', 
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'getIP.yaml',
                 limit: 'ipam',
                 extras: '-vvv',
                 sudoUser: null,
@@ -287,15 +287,15 @@ node {
                         member: member
               ])
             }
-       
+
             // Record the VS IP Address
-            env.prodIP = readFile "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip" 
-            
+            env.prodIP = readFile "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip"
+
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
-                    colorized: true, 
-                    inventory: 'hosts.ini', 
-                    playbook: 'importCrypto.yaml', 
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'importCrypto.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
                     sudoUser: null,
@@ -306,9 +306,9 @@ node {
                         appName: appName
                 ])
                 ansiblePlaybook(
-                    colorized: true, 
-                    inventory: 'hosts.ini', 
-                    playbook: 'myVSConfig.yaml', 
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'myVSConfig.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
                     sudoUser: null,
@@ -321,9 +321,9 @@ node {
                         member: member
                 ])
                 ansiblePlaybook(
-                    colorized: true, 
-                    inventory: 'hosts.ini', 
-                    playbook: 'attachASMPolicy.yaml', 
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'attachASMPolicy.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
                     sudoUser: null,
@@ -334,11 +334,11 @@ node {
                 ])
             }
    }
-   stage("Post to Slack") {
-        notifySlack("A new service is deployed!", slackNotificationChannel, [])
-   }
-   
-   
+   // stage("Post to Slack") {
+   //      notifySlack("A new service is deployed!", slackNotificationChannel, [])
+   // }
+
+
    stage('Approval') {
       input 'Proceed to Production?'
    }
