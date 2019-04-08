@@ -149,7 +149,7 @@ node {
                 inventory: 'hosts.ini',
                 playbook: 'createASMPolicy.yaml',
                 limit: 'qa:&$zone',
-                // extras: '-vvv',
+                extras: '-vvv',
                 sudoUser: null,
                 extraVars: [
                         bigip_username: USERNAME,
