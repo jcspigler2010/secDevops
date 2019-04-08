@@ -47,10 +47,10 @@ node {
             echo "Data Format: $dataFormat"
             echo "Data_Format: ${dataFormat}"
 
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-                env.userIPAM = USERNAME
-                env.passIPAM = PASSWORD
-            }
+            // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            //     env.userIPAM = USERNAME
+            //     env.passIPAM = PASSWORD
+            // }
    }
 
    stage('certificate validation') {
