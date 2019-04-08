@@ -43,7 +43,7 @@ class BigIpRest(BigIpCommon):
         self._headers = {'Content-Type': 'application/json'}
 
 	self._payload = self._vulnerabilities.replace("'", '"')
-       
+
 
     def run(self):
         changed = False
@@ -90,7 +90,7 @@ def main():
     resolveTask=obj.run()
     if resolveTask != "":
 	    changed = True
- 
+
     module.exit_json(changed=changed,resolveId=resolveTask)
 
 
@@ -99,5 +99,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-
