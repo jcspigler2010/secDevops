@@ -160,45 +160,45 @@ node {
           }
 
    }
-//
-//    //stage('1st Approval') {
-//    //   input 'Proceed to Intensive tests in QA?'
-//    //}
-//
-//   stage('Prepare Crawling and DAST') {
-//         //1. Convert the dataformat line so it can used by wget for crawling
-//         env.wget_dataFormat = sh (
-//          script: "echo 'username=%U&password=%P&Login=Login' | sed 's/%U/${app_user}/g' | sed 's/%P/${app_pass}/g'",
-//          returnStdout: true
-//          ).trim()
-//
-//         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
-//
-//         sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo auth config detailed >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set username $app_user >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set password $app_pass >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set method $method >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set auth_url https://$qaIP$loginURL >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set username_field $app_user >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set password_field $app_pass >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set check_url https://$qaIP$targetURL >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set check_string $checkString >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set data_format '$dataFormat' >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo output console,xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo output config xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set output_file ${env.BUILD_ID}_dast.xml >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set verbose False >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo target >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo set target https://$qaIP$targetURL >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo cleanup >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo start >> ${env.BUILD_ID}_dast.w3af"
-//         sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
-//    }
+
+   stage('1st Approval') {
+     input 'Proceed to Intensive tests in QA?'
+   }
+
+  stage('Prepare Crawling and DAST') {
+        //1. Convert the dataformat line so it can used by wget for crawling
+        env.wget_dataFormat = sh (
+         script: "echo 'username=%U&password=%P&Login=Login' | sed 's/%U/${app_user}/g' | sed 's/%P/${app_pass}/g'",
+         returnStdout: true
+         ).trim()
+
+        sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
+
+        sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo auth config detailed >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set username $app_user >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set password $app_pass >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set method $method >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set auth_url https://$qaIP$loginURL >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set username_field $app_user >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set password_field $app_pass >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set check_url https://$qaIP$targetURL >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set check_string $checkString >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set data_format '$dataFormat' >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo output console,xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo output config xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set output_file ${env.BUILD_ID}_dast.xml >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set verbose False >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo target >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set target https://$qaIP$targetURL >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo cleanup >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo start >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
+   }
 //
 //    stage('Crawling & Vulnerability Scan') {
 //         // Crawling
