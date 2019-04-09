@@ -24,7 +24,7 @@ class BigIpCommon(object):
     def __init__(self, module):
         self._username = module.params.get('user')
         self._password = module.params.get('password')
-	self._serviceName = module.params.get('serviceName')
+        self._serviceName = module.params.get('serviceName')
         self._hostname = module.params.get('server')
         self._validate_certs = module.params.get('validate_certs')
 
@@ -33,9 +33,9 @@ class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
 
-	self._uri = 'https://%s/mgmt/tm/asm/file-transfer/downloads/%s.xml' % (self._hostname,self._serviceName)
-        
-	self._headers = {
+        self._uri = 'https://%s/mgmt/tm/asm/file-transfer/downloads/%s.xml' % (self._hostname,self._serviceName)
+
+        self._headers = {
             'Content-Type': 'application/json'
         }
 
@@ -43,7 +43,7 @@ class BigIpRest(BigIpCommon):
 
 
     def run(self):
-	policyId = ""
+        policyId = ""
 
         resp = requests.get(self._uri,
                             auth=(self._username, self._password),
@@ -83,7 +83,7 @@ def main():
 
     if obj.run():
     	changed = True
- 
+
     module.exit_json(changed=changed)
 
 
@@ -91,4 +91,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-

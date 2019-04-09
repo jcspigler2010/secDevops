@@ -41,11 +41,11 @@ class BigIpRest(BigIpCommon):
         self._uri = 'https://%s/mgmt/tm/asm/tasks/export-policy' % (self._hostname)
 
         self._headers = {'Content-Type': 'application/json'}
-        
-	self._payload = {
-            'filename': self._serviceName + '.xml', 
-            'policyReference': { 'link': 'https://localhost/mgmt/tm/asm/policies/' + self._policyId }
-        }
+
+    self._payload = {
+        'filename': self._serviceName + '.xml',
+        'policyReference': { 'link': 'https://localhost/mgmt/tm/asm/policies/' + self._policyId }
+    }
 
 
     def run(self):
@@ -61,14 +61,14 @@ class BigIpRest(BigIpCommon):
 
 
         if resp.status_code == 201:
-	    changed = True
-	    resultat = resp.json()
-	    exportTask = resultat['id']
+            changed = True
+            resultat = resp.json()
+            exportTask = resultat['id']
 
         else:
-	    res = resp.json()
-	    raise Exception(res['message'])
-	    changed = False
+            res = resp.json()
+            raise Exception(res['message'])
+            changed = False
 
         return exportTask
 
@@ -96,7 +96,7 @@ def main():
     exportTask=obj.run()
     if exportTask != "":
 	    changed = True
- 
+
     module.exit_json(changed=changed,exportTask=exportTask)
 
 
@@ -105,5 +105,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

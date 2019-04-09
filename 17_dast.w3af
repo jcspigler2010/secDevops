@@ -1,0 +1,45 @@
+
+# -----------------------------------------------------------------------------------------------------------
+#                                              W3AF AUDIT SCRIPT FOR DVWS
+# -----------------------------------------------------------------------------------------------------------
+#Configure HTTP settings
+http-settings
+set timeout 30
+back
+misc-settings
+set max_discovery_time 3
+back
+plugins
+audit blind_sqli, buffer_overflow, cors_origin, csrf, eval, file_upload, ldapi, lfi, os_commanding, phishing_vector, redos, response_splitting, sqli, xpath, xss, xst
+crawl web_spider
+crawl config web_spider
+set only_forward False
+set ignore_regex (?i)(logout|disconnect|signout|exit)+
+back
+auth detailed
+auth config detailed
+set username admin
+set password password
+set method POST
+set auth_url http://10.1.3.203/DVWA/login.php
+set username_field admin
+set password_field password
+set check_url http://10.1.3.203/DVWA/index.php
+set check_string 'admin'
+set data_format username=%U&password=%P&Login=Login
+back
+output console, xml_f5asm
+output config xml_f5asm
+set output_file /opt/w3af/jenkins/asm_xml_results/40_dast.xml
+set verbose False
+back
+output config console
+set verbose False
+back
+back
+target
+set target http://10.1.3.203/DVWA
+back
+cleanup
+start
+exit

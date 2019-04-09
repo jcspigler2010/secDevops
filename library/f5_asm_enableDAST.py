@@ -60,9 +60,9 @@ class BigIpRest(BigIpCommon):
         if resp.status_code == 201:
             		changed = True
         else:
-            		res = resp.json()
-           		raise Exception(res['message'])
-        return changed
+            res = resp.json()
+            raise Exception(res['message'])
+            return changed
 
 
 def main():
@@ -83,12 +83,10 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-
