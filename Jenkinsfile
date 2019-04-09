@@ -43,6 +43,7 @@ node {
             env.app_pass = params.passwordField
             env.checkString = params.checkString
             env.dataFormat = params.dataFormat
+            env.vulntoolip = params.vulntoolip
 
             echo "Data Format: $dataFormat"
             echo "Data_Format: ${dataFormat}"
@@ -203,8 +204,29 @@ node {
    stage('Crawling & Vulnerability Scan') {
         // Crawling
         //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
-        sh "wget --no-check-certificate --bind-address=10.1.3.254 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
-        sh "wget --no-check-certificate --bind-address=10.1.3.254 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
+
+        withCredentials([[$class: 'sshUserPrivateKey', credentialsId: 'w3af', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
+          ansiblePlaybook(
+              colorized: true,
+              inventory: 'hosts.ini',
+              playbook: 'w3af_scan.yaml',
+              limit: 'qa:&$zone',
+              extras: '-vvv',
+              sudoUser: null,
+              extraVars: [
+                      workspace: "${env.WORKSPACE}",
+                      build_id: "${env.BUILD_ID}",
+                      vulntoolip: vulntoolip,
+                      wget_dataFormat: wget_dataFormat,
+                      qaip: qaip,
+                      targetlogin: targetlogin,
+                      targeturl: targeturl
+              ])
+        }
+
+        //
+        // sh "wget --no-check-certificate --bind-address=10.1.3.254 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
+        // sh "wget --no-check-certificate --bind-address=10.1.3.254 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
 
         // Vulnerability Assessment
         // sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
