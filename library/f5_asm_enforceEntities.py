@@ -24,7 +24,7 @@ class BigIpCommon(object):
     def __init__(self, module):
         self._username = module.params.get('user')
         self._password = module.params.get('password')
-        self._policyId = module.params.get('policyId')
+	self._policyId = module.params.get('policyId')
         self._hostname = module.params.get('server')
         self._validate_certs = module.params.get('validate_certs')
 
@@ -33,15 +33,16 @@ class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
 
-        if self._entity == "all":
-            self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "parameters")
-            self._uri[1] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "urls")
-            self._uri[2] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "filetypes")
-        else:
-            self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, self._entity)
+    	if self._entity == "all":
+            	self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "parameters")
+            	self._uri[1] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "urls")
+            	self._uri[2] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "filetypes")
+
+    	else:
+    		self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, self._entity)
 
 
-        self._headers = {
+	self._headers = {
             'Content-Type': 'application/json'
         }
 

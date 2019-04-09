@@ -53,8 +53,8 @@ class BigIpRest(BigIpCommon):
                             verify=self._validate_certs)
 
         if resp.status_code != 200:
-            res = resp.json()
-            learnMode = res.learnExplicitUrls
+	    res = resp.json()
+	    learnMode = res.learnExplicitUrls
             return learnMode
         else:
             return resp.json() #['name']
@@ -99,10 +99,12 @@ def main():
 
     if obj.run():
         changed = True
-
+    
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
+
+

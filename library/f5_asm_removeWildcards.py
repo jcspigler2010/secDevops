@@ -31,7 +31,7 @@ class BigIpCommon(object):
         self._password = module.params.get('password')
         self._hostname = module.params.get('server')
         self._policyId = module.params.get("policyId")
-        self._entity = module.params.get("entity")
+	self._entity = module.params.get("entity")
         self._validate_certs = module.params.get('validate_certs')
 
 
@@ -47,19 +47,21 @@ class BigIpRest(BigIpCommon):
         }
 
     def getWildcardId(self):
-        entityId = ""
+	entityId = ""
         resp = requests.get(self._uri,
                             auth=(self._username, self._password),
                             verify=self._validate_certs)
+        
+	if resp.status_code == 200:
+        	res = resp.json()
+		for entities in res["items"]:
+			if ( entities["name"] == "*" ):
+				entityId = entities["id"]		
+            
+            	return entityId
+        else:
+            return resp.json() #['name']	
 
-        if resp.status_code == 200:
-            res = resp.json()
-            for entities in res["items"]:
-                if ( entities["name"] == "*" ):
-                    entityId = entities["id"]
-                    return entityId
-                else:
-                    return resp.json() #['name']
 
     def run(self):
         changed = False
@@ -67,14 +69,14 @@ class BigIpRest(BigIpCommon):
 
         if current == "":
             return False
-
-            rmURI = 'https://%s/mgmt/tm/asm/policies/%s/%s/%s' % (self._hostname, self._policyId, self._entity, current)
-
-            resp = requests.delete(rmURI,
-            	    headers=self._headers,
-                                auth=(self._username, self._password),
-                                data=json.dumps(self._payload),
-                                verify=self._validate_certs)
+	
+	rmURI = 'https://%s/mgmt/tm/asm/policies/%s/%s/%s' % (self._hostname, self._policyId, self._entity, current)
+	
+        resp = requests.delete(rmURI,
+			    headers=self._headers,
+                            auth=(self._username, self._password),
+                            data=json.dumps(self._payload),
+                            verify=self._validate_certs)
 
 
         if resp.status_code == 201:
@@ -104,10 +106,12 @@ def main():
 
     if obj.run():
         changed = True
-
+    
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
+
+

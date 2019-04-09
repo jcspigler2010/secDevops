@@ -32,7 +32,7 @@ class BigIpCommon(object):
         self._hostname = module.params.get('server')
         self._serviceName = module.params.get('serviceName')
         self._policyId = module.params.get('policyId')
-        self._fileName = module.params.get('fileName')
+	self._fileName = module.params.get('fileName')
         self._validate_certs = module.params.get('validate_certs')
 
 class BigIpRest(BigIpCommon):
@@ -42,10 +42,10 @@ class BigIpRest(BigIpCommon):
         self._uri = 'https://%s/mgmt/tm/asm/tasks/import-vulnerabilities' % (self._hostname)
 
         self._headers = {'Content-Type': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded'}
-
-        self._payload = {
-            'filename': self._fileName,
-        'importAllDomainNames' : 'true',
+        
+	self._payload = {
+            'filename': self._fileName, 
+	    'importAllDomainNames' : 'true',
             "policyReference": {"link": "https://localhost/mgmt/tm/asm/policies/" + self._policyId  }
         }
 
@@ -62,14 +62,14 @@ class BigIpRest(BigIpCommon):
 
 
         if resp.status_code == 201:
-            changed = True
-            resultat = resp.json()
-            importTask = resultat['id']
+	    changed = True
+	    resultat = resp.json()
+	    importTask = resultat['id']
         else:
-            res = resp.json()
-            raise Exception(res['message'])
-            changed = False
-            return importTask
+	    res = resp.json()
+	    raise Exception(res['message'])
+	    changed = False
+        return importTask
 
 
 
@@ -82,9 +82,9 @@ def main():
             serviceName=dict(required=True),
             user=dict(required=True, aliases=['username']),
             password=dict(required=True),
-            policyId=dict(required=True),
+	    policyId=dict(required=True),
             fileName=dict(required=True),
-            validate_certs=dict(default='no', type='bool')
+	    validate_certs=dict(default='no', type='bool')
         )
 
     )
@@ -96,7 +96,7 @@ def main():
     importTask=obj.run()
     if importTask != "":
 	    changed = True
-
+ 
     module.exit_json(changed=changed,importTask=importTask)
 
 
@@ -105,3 +105,5 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
+
+

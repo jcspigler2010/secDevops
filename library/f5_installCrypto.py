@@ -42,12 +42,12 @@ class BigIpRest(BigIpCommon):
         self._uri = 'https://%s/mgmt/tm/sys/crypto/%s' % (self._hostname, self._fileType)
 
         self._headers = {'Content-Type': 'application/json'}
-
-        self._payload = {
-            'command': 'install',
-                'name': self._serviceName,
-                'from-local-file': '/var/config/rest/downloads/' + self._fileName
-            }
+        
+	self._payload = {
+	    'command': 'install',
+            'name': self._serviceName, 
+            'from-local-file': '/var/config/rest/downloads/' + self._fileName 
+        }
 
 
     def run(self):
@@ -62,12 +62,12 @@ class BigIpRest(BigIpCommon):
 
 
         if resp.status_code == 200:
-            changed = True
-            resultat = resp.json()
+	    changed = True
+	    resultat = resp.json()
         else:
-            res = resp.json()
-            raise Exception(res['message'])
-            changed = False
+	    res = resp.json()
+	    raise Exception(res['message'])
+	    changed = False
         return changed
 
 
@@ -80,7 +80,7 @@ def main():
             server=dict(required=True),
             serviceName=dict(required=True),
             fileName=dict(default=''),
-            fileType=dict(required=True, choices=['key', 'cert']),
+	    fileType=dict(required=True, choices=['key', 'cert']),
             user=dict(required=True, aliases=['username']),
             password=dict(required=True),
             validate_certs=dict(default='no', type='bool')
@@ -94,7 +94,7 @@ def main():
 
     if obj.run():
 	    changed = True
-
+ 
     module.exit_json(changed=changed)
 
 
@@ -103,3 +103,5 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
+
+
