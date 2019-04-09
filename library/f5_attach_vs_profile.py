@@ -36,7 +36,6 @@ class BigIpCommon(object):
         self._name = module.params.get('name')
         self._context = module.params.get('context')
 
-
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
@@ -107,12 +106,10 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

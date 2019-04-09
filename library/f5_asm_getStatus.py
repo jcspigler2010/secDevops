@@ -24,8 +24,8 @@ class BigIpCommon(object):
     def __init__(self, module):
         self._username = module.params.get('user')
         self._password = module.params.get('password')
-	self._taskId = module.params.get('taskId')
-	self._taskType = module.params.get('taskType')
+        self._taskId = module.params.get('taskId')
+        self._taskType = module.params.get('taskType')
         self._hostname = module.params.get('server')
         self._validate_certs = module.params.get('validate_certs')
 
@@ -33,10 +33,8 @@ class BigIpCommon(object):
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
-
-	self._uri = 'https://%s/mgmt/tm/asm/tasks/%s/%s' % (self._hostname, self._taskType, self._taskId)
-        
-	self._headers = {
+        self._uri = 'https://%s/mgmt/tm/asm/tasks/%s/%s' % (self._hostname, self._taskType, self._taskId)
+        self._headers = {
             'Content-Type': 'application/json'
         }
 
@@ -44,17 +42,16 @@ class BigIpRest(BigIpCommon):
 
 
     def run(self):
-	taskStatus = ""
-
+        taskStatus = ""
         resp = requests.get(self._uri,
                             auth=(self._username, self._password),
                             verify=self._validate_certs)
 
 
         if resp.status_code == 200:
-	    resultat = resp.json()
+            resultat = resp.json()
 
-	    taskStatus = str(resultat['status'])
+            taskStatus = str(resultat['status'])
 
         else:
             res = resp.json()
@@ -82,13 +79,12 @@ def main():
 #    if obj.run():
     taskStatus = obj.run()
     if taskStatus != "":
-	changed = True
- 
-    module.exit_json(changed=changed, taskStatus=taskStatus)
+        changed = True
+
+        module.exit_json(changed=changed, taskStatus=taskStatus)
 
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-

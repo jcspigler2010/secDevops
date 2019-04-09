@@ -46,7 +46,7 @@ class BigIpCommon(object):
         self._validate_certs = module.params.get('validate_certs')
         self._transactionId = module.params.get('transactionId')
         self._partition = module.params.get('partition')
-	self._parent = module.params.get('parent')
+        self._parent = module.params.get('parent')
         self._name = module.params.get('name')
         self._side = module.params.get('side')
         self._cert = module.params.get('cert')
@@ -60,7 +60,7 @@ class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
 
-	self._uri = 'https://%s/mgmt/tm/ltm/profile/%s-ssl' % (self._hostname, self._side)
+        self._uri = 'https://%s/mgmt/tm/ltm/profile/%s-ssl' % (self._hostname, self._side)
 
         self._headers = {
             'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ class BigIpRest(BigIpCommon):
             "name": self._name,
             "cert": self._cert,
             "key": self._key,
-            "defaultsFrom": self._parent 
+            "defaultsFrom": self._parent
         }
 
 
@@ -105,9 +105,9 @@ class BigIpRest(BigIpCommon):
         	changed = True
 
         else:
-           	res = resp.json()
-            	raise Exception(res['message'])
-	    	changed = False
+            res = resp.json()
+            raise Exception(res['message'])
+            changed = False
         return changed
 
 
@@ -122,7 +122,7 @@ def main():
             partition=dict(default='Common'),
             name=dict(required=True),
             side=dict(required=True, choices=['client', 'server']),
-	    parent=dict(required=True),
+            parent=dict(required=True),
             cert=dict(required=True),
             key=dict(required=True),
             user=dict(required=True, aliases=['username']),
@@ -135,7 +135,7 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
