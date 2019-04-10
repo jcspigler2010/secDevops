@@ -110,9 +110,10 @@ node {
             // env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
 
             // Create LB Config
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD', installation:'ansible1']]) {
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
                     colorized: true,
+                    installation: 'ansible1',
                     inventory: 'hosts.ini',
                     playbook: 'importCrypto.yaml',
                     limit: 'qa:&$zone',
