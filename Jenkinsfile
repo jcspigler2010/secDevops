@@ -114,7 +114,7 @@ node {
                ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
-                    inventory: 'hosts.ini',
+                    inventory: "${env.WORKSPACE}/hosts.ini",
                     playbook: 'importCrypto.yaml',
                     limit: 'qa:&$zone',
                     extras: '-vvv',
@@ -131,7 +131,7 @@ node {
               ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'myVSConfig.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
@@ -150,7 +150,7 @@ node {
             ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'createASMPolicy.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
@@ -212,7 +212,7 @@ node {
           ansiblePlaybook(
               installation: 'ansible-2.7.10',
               colorized: true,
-              inventory: 'hosts.ini',
+              inventory: "${env.WORKSPACE}/hosts.ini",
               playbook: 'w3af_scan.yaml',
               limit: 'qa:&$zone',
               extras: '-vvv',
@@ -245,7 +245,7 @@ node {
             ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'removeASMWildcard.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
@@ -258,7 +258,7 @@ node {
              ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'importVulnerabilities.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
@@ -273,7 +273,7 @@ node {
             ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'exportPolicy.yaml',
                 limit: 'qa:&$zone',
                 extras: '-vvv',
@@ -287,7 +287,7 @@ node {
             ansiblePlaybook(
                 installation: 'ansible-2.7.10',
                 colorized: true,
-                inventory: 'hosts.ini',
+                inventory: "${env.WORKSPACE}/hosts.ini",
                 playbook: 'importPolicy.yaml',
                 limit: 'prod:&$zone',
                 extras: '-vvv',
@@ -328,7 +328,7 @@ node {
                ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
-                    inventory: 'hosts.ini',
+                    inventory: "${env.WORKSPACE}/hosts.ini",
                     playbook: 'importCrypto.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
@@ -342,7 +342,7 @@ node {
                 ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
-                    inventory: 'hosts.ini',
+                    inventory: "${env.WORKSPACE}/hosts.ini",
                     playbook: 'myVSConfig.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
@@ -358,7 +358,7 @@ node {
                 ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
-                    inventory: 'hosts.ini',
+                    inventory: "${env.WORKSPACE}/hosts.ini",
                     playbook: 'attachASMPolicy.yaml',
                     limit: 'prod:&$zone',
                     extras: '-vvv',
