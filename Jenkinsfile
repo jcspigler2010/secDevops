@@ -114,7 +114,6 @@ node {
                ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
-                    installation: 'ansible1',
                     inventory: 'hosts.ini',
                     playbook: 'importCrypto.yaml',
                     limit: 'qa:&$zone',
