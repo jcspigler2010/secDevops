@@ -44,11 +44,11 @@ node {
             env.checkString = params.checkString
             env.dataFormat = params.dataFormat
             env.vulntoolip = params.vulntoolip
-
             echo "Data Format: $dataFormat"
             echo "Data_Format: ${dataFormat}"
 
-            env.qaIP = params.vsIP
+            env.qaIP = params.qaIP
+            env.prodIP = params.prodIP
 
             // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             //     env.userIPAM = USERNAME
@@ -112,7 +112,7 @@ node {
             // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
-                    installation: 'ansible1',
+                    installation: 'ansible-2.7.10',
                     colorized: true,
                     installation: 'ansible1',
                     inventory: 'hosts.ini',
@@ -130,6 +130,7 @@ node {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
               ansiblePlaybook(
+                installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'myVSConfig.yaml',
@@ -148,6 +149,7 @@ node {
 
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
+              installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'createASMPolicy.yaml',
@@ -209,6 +211,7 @@ node {
 
         withCredentials([[$class: 'sshUserPrivateKey', credentialsId: 'w3af', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
           ansiblePlaybook(
+            installation: 'ansible-2.7.10',
               colorized: true,
               inventory: 'hosts.ini',
               playbook: 'w3af_scan.yaml',
@@ -234,138 +237,145 @@ node {
         // sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
    }
 //
-//    //stage('2nd Approval') {
-//    //   input 'Proceed to Production?'
-//    //}
-//
-//    stage('Export WAF Policy and resolve vulnerabilities') {
-//         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//             ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'removeASMWildcard.yaml',
-//                 limit: 'qa:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                     bigip_username: USERNAME,
-//                     bigip_password: PASSWORD,
-//                     appName: appName
-//                 ])
-//              ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'importVulnerabilities.yaml',
-//                 limit: 'qa:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                     bigip_username: USERNAME,
-//                     bigip_password: PASSWORD,
-//                     fqdn: fqdn,
-//                     appName: appName,
-//                     buildId: "${env.BUILD_ID}"
-//             ])
-//             ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'exportPolicy.yaml',
-//                 limit: 'qa:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                     bigip_username: USERNAME,
-//                     bigip_password: PASSWORD,
-//                     fqdn: fqdn,
-//                     appName: appName
-//                 ])
-//             ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'importPolicy.yaml',
-//                 limit: 'prod:&$zone',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                     host: 'prod:&$zone',
-//                     bigip_username: USERNAME,
-//                     bigip_password: PASSWORD,
-//                     fqdn: fqdn,
-//                     appName: appName
-//                 ])
-//         }
-//    }
-//    stage('Create Service in Production') {
-//             // Request IP Address for IPAM
-//             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//               ansiblePlaybook(
-//                 colorized: true,
-//                 inventory: 'hosts.ini',
-//                 playbook: 'getIP.yaml',
-//                 limit: 'ipam',
-//                 extras: '-vvv',
-//                 sudoUser: null,
-//                 extraVars: [
-//                         user: USERNAME,
-//                         password: PASSWORD,
-//                         fqdn: fqdn,
-//                         outputFile: "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip",
-//                         member: member
-//               ])
-//             }
-//
-//             // Record the VS IP Address
-//             env.prodIP = readFile "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip"
-//
-//             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-//                ansiblePlaybook(
-//                     colorized: true,
-//                     inventory: 'hosts.ini',
-//                     playbook: 'importCrypto.yaml',
-//                     limit: 'prod:&$zone',
-//                     extras: '-vvv',
-//                     sudoUser: null,
-//                     extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         fqdn: fqdn,
-//                         appName: appName
-//                 ])
-//                 ansiblePlaybook(
-//                     colorized: true,
-//                     inventory: 'hosts.ini',
-//                     playbook: 'myVSConfig.yaml',
-//                     limit: 'prod:&$zone',
-//                     extras: '-vvv',
-//                     sudoUser: null,
-//                     extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         fqdn: fqdn,
-//                         vsIP: prodIP,
-//                         appName: appName,
-//                         member: member
-//                 ])
-//                 ansiblePlaybook(
-//                     colorized: true,
-//                     inventory: 'hosts.ini',
-//                     playbook: 'attachASMPolicy.yaml',
-//                     limit: 'prod:&$zone',
-//                     extras: '-vvv',
-//                     sudoUser: null,
-//                     extraVars: [
-//                         bigip_username: USERNAME,
-//                         bigip_password: PASSWORD,
-//                         appName: appName
-//                 ])
-//             }
-//    }
-//    // stage("Post to Slack") {
-//    //      notifySlack("A new service is deployed!", slackNotificationChannel, [])
-//    // }
-//
-//
-//    stage('Approval') {
-//       input 'Proceed to Production?'
-//    }
+   //stage('2nd Approval') {
+   //   input 'Proceed to Production?'
+   //}
+
+   stage('Export WAF Policy and resolve vulnerabilities') {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            ansiblePlaybook(
+              installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'removeASMWildcard.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    appName: appName
+                ])
+             ansiblePlaybook(
+               installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'importVulnerabilities.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    fqdn: fqdn,
+                    appName: appName,
+                    buildId: "${env.BUILD_ID}"
+            ])
+            ansiblePlaybook(
+              installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'exportPolicy.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    fqdn: fqdn,
+                    appName: appName
+                ])
+            ansiblePlaybook(
+                colorized: true,
+                inventory: 'hosts.ini',
+                playbook: 'importPolicy.yaml',
+                limit: 'prod:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    host: 'prod:&$zone',
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    fqdn: fqdn,
+                    appName: appName
+                ])
+        }
+   }
+   stage('Create Service in Production') {
+            // Request IP Address for IPAM
+            // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            //   ansiblePlaybook(
+            //     installation: 'ansible-2.7.10',
+            //     colorized: true,
+            //     inventory: 'hosts.ini',
+            //     playbook: 'getIP.yaml',
+            //     limit: 'ipam',
+            //     extras: '-vvv',
+            //     sudoUser: null,
+            //     extraVars: [
+            //             user: USERNAME,
+            //             password: PASSWORD,
+            //             fqdn: fqdn,
+            //             outputFile: "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip",
+            //             member: member
+            //   ])
+            // }
+
+            // Record the VS IP Address
+            // env.prodIP = readFile "${env.WORKSPACE}/${appName}_prod_${env.BUILD_ID}.ip"
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+               ansiblePlaybook(
+                    installation: 'ansible-2.7.10',
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'importCrypto.yaml',
+                    limit: 'prod:&$zone',
+                    extras: '-vvv',
+                    sudoUser: null,
+                    extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName
+                ])
+                ansiblePlaybook(
+                    installation: 'ansible-2.7.10',
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'myVSConfig.yaml',
+                    limit: 'prod:&$zone',
+                    extras: '-vvv',
+                    sudoUser: null,
+                    extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        vsIP: prodIP,
+                        appName: appName,
+                        member: member
+                ])
+                ansiblePlaybook(
+                    installation: 'ansible-2.7.10',
+                    colorized: true,
+                    inventory: 'hosts.ini',
+                    playbook: 'attachASMPolicy.yaml',
+                    limit: 'prod:&$zone',
+                    extras: '-vvv',
+                    sudoUser: null,
+                    extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        appName: appName
+                ])
+            }
+   }
+   // stage("Post to Slack") {
+   //      notifySlack("A new service is deployed!", slackNotificationChannel, [])
+   // }
+
+
+   stage('Approval') {
+      input 'Proceed to Production?'
+   }
 }
