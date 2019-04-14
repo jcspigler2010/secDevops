@@ -31,29 +31,22 @@ class BigIpCommon(object):
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
-
-	self._uri = 'https://%s/mgmt/tm/transaction' % (self._hostname)
-        
-	self._headers = {
+        self._uri = 'https://%s/mgmt/tm/transaction' % (self._hostname)
+        self._headers = {
             'Content-Type': 'application/json'
         }
-
         self._payload = {}
 
 
     def run(self):
-	transId = ""
-
-        resp = requests.post(self._uri,
-                            auth=(self._username, self._password),
-                            data=json.dumps(self._payload),
-                            verify=self._validate_certs)
+        transId = ""
+        resp = requests.post(self._uri, auth=(self._username, self._password), data=json.dumps(self._payload), verify=self._validate_certs)
 
 
 
         if resp.status_code == 200:
-	    resultat = resp.json()
-	    transId = str(resultat['transId'])
+    	    resultat = resp.json()
+    	    transId = str(resultat['transId'])
 
 
         else:
@@ -83,7 +76,7 @@ def main():
 #    if obj.run():
     transaction = obj.run()
     changed = True
- 
+
     module.exit_json(changed=changed, transId=transaction)
 #    module.exit_json(transId=transaction)
 
@@ -92,4 +85,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-

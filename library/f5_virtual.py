@@ -36,7 +36,7 @@ class BigIpCommon(object):
         self._destination = module.params.get('destination')
         self._port = module.params.get('port')
         self._mask = module.params.get('mask')
-	self._ipProtocol = module.params.get('ipProtocol')
+        self._ipProtocol = module.params.get('ipProtocol')
         self._pool = module.params.get('pool')
         self._source = module.params.get('source')
         self._snat = module.params.get('snat')
@@ -47,7 +47,7 @@ class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
 
-	self._uri = 'https://%s/mgmt/tm/ltm/virtual' % (self._hostname)
+        self._uri = 'https://%s/mgmt/tm/ltm/virtual' % (self._hostname)
 
         self._headers = {
             'Content-Type': 'application/json',
@@ -58,15 +58,15 @@ class BigIpRest(BigIpCommon):
             "name": self._name ,
             "destination": "/" + self._partition + "/" + self._destination + ":" + self._port,
             "mask": self._mask,
-            "pool": self._pool, 
-	    "ipProtocol": self._ipProtocol,
-            "source": "0.0.0.0/0", 
+            "pool": self._pool,
+            "ipProtocol": self._ipProtocol,
+            "source": "0.0.0.0/0",
             "securityLogProfiles": ["\"/Common/Log all requests\""],
-	    "sourceAddressTranslation": {
-                "pool": self._snatpool,
-                "type": self._snat
+            "sourceAddressTranslation": {
+                    "pool": self._snatpool,
+                    "type": self._snat
+                }
             }
-        }
 
 
 
@@ -102,7 +102,7 @@ class BigIpRest(BigIpCommon):
         else:
             res = resp.json()
            # raise Exception(res['message'])
-	    changed = False
+            changed = False
         return changed
 
 
@@ -116,11 +116,11 @@ def main():
             transactionId=dict(required=True),
             partition=dict(default='Common'),
             name=dict(required=True),
-	    description=dict(default=''),
+            description=dict(default=''),
             destination=dict(required=True),
             port=dict(required=True),
             mask=dict(default='255.255.255.255'),
-	    ipProtocol=dict(default='tcp'),
+            ipProtocol=dict(default='tcp'),
             pool=dict(required=True),
             source=dict(default='0.0.0.0/0'),
             snat=dict(default='automap'),
@@ -136,7 +136,7 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *

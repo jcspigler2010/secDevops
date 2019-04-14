@@ -37,11 +37,11 @@ class BigIpCommon(object):
         self._hasParent = module.params.get('hasParent')
         self._virtual = module.params.get('virtual')
         self._parentPolicyName = module.params.get('parentPolicyName')
-		self._policyTemplate = module.params.get('policyTemplate')
+        self._policyTemplate = module.params.get('policyTemplate')
         self._appLang = module.params.get('lang')
         self._enforceMode = module.params.get('enforcementMode')
         self._validate_certs = module.params.get('validate_certs')
-		self._virtualServers = ["/" + self._partition + "/" + self._virtual]
+        self._virtualServers = ["/" + self._partition + "/" + self._virtual]
 
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
@@ -51,28 +51,28 @@ class BigIpRest(BigIpCommon):
 
         self._headers = {'Content-Type': 'application/json', 'X-F5-REST-Coordination-Id': self._transactionId}
 
-	if self._hasParent == 'false':
-		self._payload = {
-	            	"name": self._name, 
-            		"description": self._description,
-            		"partition": self._partition,
-            		"hasParent": self._hasParent,
-	    			"templateReference": self._policyTemplate,
-	    			"virtualServers": self._virtualServers, 
-            		"applicationLanguage": self._appLang,
-            		"enforcementMode": self._enforceMode
-        	}
-	else:
-		self._payload = {
-	            	"name": self._name, 
-             		"description": self._description,
-            		"partition": self._partition,
-            		"hasParent": self._hasParent,
-	    			"parentPolicyName": self._parentPolicyName,
-	    			"virtualServers": self._virtualServers, 
-            		"applicationLanguage": self._appLang,
-            		"enforcementMode": self._enforceMode
-        	}
+        if self._hasParent == 'false':
+            self._payload = {
+                    	"name": self._name,
+                		"description": self._description,
+                		"partition": self._partition,
+                		"hasParent": self._hasParent,
+            			"templateReference": self._policyTemplate,
+            			"virtualServers": self._virtualServers,
+                		"applicationLanguage": self._appLang,
+                		"enforcementMode": self._enforceMode
+            	}
+        else:
+            self._payload = {
+                    	"name": self._name,
+                 		"description": self._description,
+                		"partition": self._partition,
+                		"hasParent": self._hasParent,
+            			"parentPolicyName": self._parentPolicyName,
+            			"virtualServers": self._virtualServers,
+                		"applicationLanguage": self._appLang,
+                		"enforcementMode": self._enforceMode
+            	}
 
     def read(self):
         resp = requests.get(self._uri,
@@ -99,11 +99,11 @@ class BigIpRest(BigIpCommon):
 
 
         if resp.status_code == 200:
-	    changed = True
+    	    changed = True
         else:
-	    res = resp.json()
+    	    res = resp.json()
 	    #raise Exception(res['message'])
-	    changed = False
+    	    changed = False
         return changed
 
 
@@ -133,7 +133,7 @@ def main():
             lang=dict(default='utf-8', choices=['utf-8', 'western']),
             enforcementMode=dict(default='blocking', choices=['blocking', 'transparent']),
             user=dict(
-		    required=True, 
+		    required=True,
 		    aliases=['username'],
 	    	    fallback=(env_fallback, ['F5_USER'])
 	    	),
@@ -156,7 +156,7 @@ def main():
     asmpolicy = obj.run()
     if asmpolicy:
         changed = True
- 
+
     module.exit_json(changed=changed, policy=asmpolicy)
 
 
@@ -165,5 +165,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

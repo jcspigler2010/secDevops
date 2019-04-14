@@ -31,8 +31,8 @@ class BigIpCommon(object):
         self._password = module.params.get('password')
         self._hostname = module.params.get('server')
         self._serviceName = module.params.get('serviceName')
-	self._fileName = module.params.get('fileName')
-	self._targetPolicy = module.params.get('targetPolicy')
+        self._fileName = module.params.get('fileName')
+        self._targetPolicy = module.params.get('targetPolicy')
         self._validate_certs = module.params.get('validate_certs')
 
 class BigIpRest(BigIpCommon):
@@ -42,10 +42,10 @@ class BigIpRest(BigIpCommon):
         self._uri = 'https://%s/mgmt/tm/asm/tasks/import-policy' % (self._hostname)
 
         self._headers = {'Content-Type': 'application/json'}
-        
-	self._payload = {
-            'filename': self._fileName, 
-            'name':  self._targetPolicy 
+
+        self._payload = {
+            'filename': self._fileName,
+            'name':  self._targetPolicy
         }
 
 
@@ -62,13 +62,13 @@ class BigIpRest(BigIpCommon):
 
 
         if resp.status_code == 201:
-	    changed = True
-	    resultat = resp.json()
-	    importTask = resultat['id']
+            changed = True
+            resultat = resp.json()
+            importTask = resultat['id']
         else:
-	    res = resp.json()
-	    raise Exception(res['message'])
-	    changed = False
+            res = resp.json()
+            raise Exception(res['message'])
+            changed = False
         return importTask
 
 
@@ -96,7 +96,7 @@ def main():
     importTask=obj.run()
     if importTask != "":
 	    changed = True
- 
+
     module.exit_json(changed=changed,taskId=importTask)
 
 
@@ -105,5 +105,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

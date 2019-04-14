@@ -75,7 +75,7 @@ class BigIpRest(BigIpCommon):
             changed = True
         else:
             res = resp.json()
-	    f = open("/tmp/commit.txt","w")
+            f = open("/tmp/commit.txt","w")
             f.write(str(res) + "\n")
             f.close()
 
@@ -102,12 +102,10 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

@@ -112,6 +112,7 @@ node {
             // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
+                    installation: 'ansible1',
                     colorized: true,
                     installation: 'ansible1',
                     inventory: 'hosts.ini',

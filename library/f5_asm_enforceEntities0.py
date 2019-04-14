@@ -34,32 +34,28 @@ class BigIpRest(BigIpCommon):
         super(BigIpRest, self).__init__(module)
 
         if self._entity == "all":
-            	self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "parameters")
-            	self._uri[1] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "urls")
-            	self._uri[2] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "filetypes")
+            self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "parameters")
+            self._uri[1] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "urls")
+            self._uri[2] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, "filetypes")
 
         else:
-                self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, self._entity)
+            self._uri[0] = 'https://%s/mgmt/tm/asm/policies/%s/%s?$filter=performStaging+eq+true' % (self._hostname, self._entity)
 
 
-    self._headers = {
-            'Content-Type': 'application/json'
-        }
+            self._headers = {
+                'Content-Type': 'application/json'
+            }
 
-    self._payload = {"performStaging": false}
+            self._payload = {"performStaging": false}
 
 
     def read(self):
-        for targetURI in self._uri[]:
-            resp = requests.get(targetURI,
-                            headers=self._headers,
-                            auth=(self._username, self._password),
-                            verify=self._validate_certs)
-
+        for targetURI in self._uri:
+            resp = requests.get(targetURI,headers=self._headers,auth=(self._username, self._password),verify=self._validate_certs)
             if resp.status_code == 200:
-                    return resp.json()
+                return resp.json()
             else:
-                    return False
+                return False
 
 
     def run(self):
@@ -67,7 +63,7 @@ class BigIpRest(BigIpCommon):
         current = self.read()
 
         for a in current['id']:
-            for b in self._uri[]:
+            for b in self._uri:
                 myURI = ''.join([b, a])
                 resp = requests.patch(myURI, auth=(self._username, self._password),
 #                            data=json.dumps(self._payload),
@@ -75,14 +71,14 @@ class BigIpRest(BigIpCommon):
 
                 if resp.status_code == 200:
 	                   resultat = resp.json()
-        for a in resultat['items']:
-            if a['resolveType'] == "automatically-resolvable":
-                vulns.append({'link': 'https://localhost/mgmt/tm/asm/policies/%s/vulnerabilities/%s' % (self._policyId, a['id'])})
-                #f = open("/tmp/" + self._policyId + ".txt","w")
-                    #f.write(str(resultat['items'][0]['id']))
-                    #f.close()
-                #policyId = str(resultat['items'][0]['id'])
-                vulnerabilities['vulnerabilityReferences'] = vulns
+	    for a in resultat['items']:
+		if a['resolveType'] == "automatically-resolvable":
+			vulns.append({'link': 'https://localhost/mgmt/tm/asm/policies/%s/vulnerabilities/%s' % (self._policyId, a['id'])})
+	    #f = open("/tmp/" + self._policyId + ".txt","w")
+            #f.write(str(resultat['items'][0]['id']))
+            #f.close()
+	    #policyId = str(resultat['items'][0]['id'])
+            vulnerabilities['vulnerabilityReferences'] = vulns
 
 
         else:

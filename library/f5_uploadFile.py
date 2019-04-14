@@ -31,31 +31,30 @@ class BigIpCommon(object):
         self._password = module.params.get('password')
         self._hostname = module.params.get('server')
         self._fileName = module.params.get('fileName')
-	self._fileType = module.params.get('fileType')
+        self._fileType = module.params.get('fileType')
         self._validate_certs = module.params.get('validate_certs')
 
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
+        self._headers = {
+                'Content-Type': 'application/octet-stream'
+            }
 
-	self._headers = {
-            'Content-Type': 'application/octet-stream'
-        }
-
-	if self._fileType == "policy":
-        	self._uri = 'https://%s/mgmt/tm/asm/file-transfer/uploads/%s' % (self._hostname, self._fileName)
-	elif self._fileType == "vulnerabilities":
-                self._uri = 'https://%s/mgmt/tm/asm/file-transfer/uploads/%s' % (self._hostname, self._fileName)
-	else:
-		self._uri = 'https://%s/mgmt/shared/file-transfer/uploads/%s' % (self._hostname, self._fileName)
+        if self._fileType == "policy":
+            self._uri = 'https://%s/mgmt/tm/asm/file-transfer/uploads/%s' % (self._hostname, self._fileName)
+        elif self._fileType == "vulnerabilities":
+            self._uri = 'https://%s/mgmt/tm/asm/file-transfer/uploads/%s' % (self._hostname, self._fileName)
+        else:
+            self._uri = 'https://%s/mgmt/shared/file-transfer/uploads/%s' % (self._hostname, self._fileName)
 
 
     def run(self):
         changed = False
 
-	chunk_size = 512 * 1024
+        chunk_size = 512 * 1024
 
-	fileobj = open(self._fileName, 'rb')
+        fileobj = open(self._fileName, 'rb')
         filename = os.path.basename(self._fileName)
 
         requests.packages.urllib3.disable_warnings()
@@ -66,10 +65,11 @@ class BigIpRest(BigIpCommon):
         while True:
                 file_slice = fileobj.read(chunk_size)
                 if not file_slice:
-                	changed = True
-		        break
+                    changed = True
+                    break
 
                 current_bytes = len(file_slice)
+
                 if current_bytes < chunk_size:
                         end = size
                 else:
@@ -82,7 +82,7 @@ class BigIpRest(BigIpCommon):
                       	auth=(self._username, self._password),
                       	data=file_slice,
                       	verify=self._validate_certs)
-		
+
 
                 start += current_bytes
 
@@ -110,7 +110,7 @@ def main():
 
     if obj.run():
     	changed = True
- 
+
     module.exit_json(changed=changed)
 
 
@@ -119,5 +119,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

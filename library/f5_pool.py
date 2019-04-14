@@ -31,7 +31,7 @@ class BigIpCommon(object):
         self._password = module.params.get('password')
         self._hostname = module.params.get('server')
         self._name = module.params.get("name")
-	self._transactionId = module.params.get('transactionId')
+        self._transactionId = module.params.get('transactionId')
         self._monitor = module.params.get("monitor")
         self._validate_certs = module.params.get('validate_certs')
 
@@ -89,12 +89,12 @@ def main():
         argument_spec=dict(
             server=dict(required=True),
             validate_certs=dict(default='no', type='bool'),
-	    transactionId=dict(default=''),
+            transactionId=dict(default=''),
             password=dict(required=True),
             user=dict(required=True, aliases=['username']),
             name=dict(required=True),
             monitor=dict(defaults='', choices=['http', 'https', 'tcp'])
-        )
+            )
     )
 
 
@@ -102,12 +102,10 @@ def main():
 
     if obj.run():
         changed = True
-    
+
     module.exit_json(changed=changed)
 
 from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
-

@@ -26,27 +26,27 @@ class BigIpCommon(object):
         self._password = module.params.get('password')
         self._hostname = module.params.get('server')
         self._validate_certs = module.params.get('validate_certs')
-	self._azPublicIP = module.params.get('azPublicIP')
-	self._fqdn = module.params.get('fqdn')
+        self._azPublicIP = module.params.get('azPublicIP')
+        self._fqdn = module.params.get('fqdn')
 
 class BigIpRest(BigIpCommon):
     def __init__(self, module):
         super(BigIpRest, self).__init__(module)
 
-	self._uri = 'https://%s/mgmt/tm/transaction' % (self._hostname)
-        
-	self._headers = {
-            'Content-Type': 'application/json'
-        }
+        self._uri = 'https://%s/mgmt/tm/transaction' % (self._hostname)
+
+        self._headers = {
+                'Content-Type': 'application/json'
+            }
 
         self._payload = {
-	    "fqdn": self._fqdn,
-            "azPublicIP": self._azPublicIP,
-	}
+        "fqdn": self._fqdn,
+        "azPublicIP": self._azPublicIP,
+        }
 
 
     def run(self):
-	transId = ""
+        transId = ""
 
         resp = requests.post(self._uri,
                             auth=(self._username, self._password),
@@ -57,8 +57,8 @@ class BigIpRest(BigIpCommon):
 
         if resp.status_code == 200:
 #            f.write("response code: " + str(resp) + "\n")
-	    resultat = resp.json()
-	    f = open("/tmp/outLogs.txt","w")
+            resultat = resp.json()
+            f = open("/tmp/outLogs.txt","w")
             f.write("URI: " + self._uri + "\n")
             f.write("Headers: " + str(resp.headers) + "\n")
             f.write("Payload: " + str(json.dumps(self._payload)) + "\n")
@@ -101,8 +101,8 @@ def main():
     changed = True
     f = open("outLogs.txt","w")
     f.write("OBJ: " + transaction + "\n")
-    f.close()    
- 
+    f.close()
+
     module.exit_json(changed=changed, transId=transaction)
 #    module.exit_json(transId=transaction)
 
@@ -111,4 +111,3 @@ from ansible.module_utils.basic import *
 
 if __name__ == '__main__':
     main()
-
