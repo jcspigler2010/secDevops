@@ -6,7 +6,7 @@
 
     - name: ensure directory exists for dast profile
       file:
-        path=/opt/w3af/jenkins/dast_profiles/myPipeline
+        path=/opt/w3af/jenkins/dast_profiles/f5_dynamic_waf
         recurse=yes
         state=directory
 
@@ -30,11 +30,11 @@
       register: result
 
     - name: initate vul if w3af file exists
-      shell: "/opt/w3af/w3af_console --no-update -s /opt/w3af/jenkins/dast_profiles/myPipeline/{{ build_id }}_dast.w3af"
+      shell: "/opt/w3af/w3af_console --no-update -s /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
 
     - name: wait for scan to complete
       wait_for:
-        path: "/opt/w3af/jenkins/dast_profiles/myPipeline/{{ build_id }}_dast.w3af"
+        path: "/opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
 
     - name: fetch DAST xml_f5asm output file
       fetch:
