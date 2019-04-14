@@ -112,7 +112,7 @@ node {
             // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
-                    installation: 'ansible-2.7.10',
+                    // installation: 'ansible-2.7.10',
                     colorized: true,
                     inventory: 'hosts.ini',
                     playbook: 'importCrypto.yaml',
@@ -129,7 +129,7 @@ node {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
               ansiblePlaybook(
-                installation: 'ansible-2.7.10',
+                // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'myVSConfig.yaml',
@@ -148,7 +148,7 @@ node {
 
           withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
-              installation: 'ansible-2.7.10',
+                // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'createASMPolicy.yaml',
@@ -208,9 +208,9 @@ node {
         // Crawling
         //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
 
-        withCredentials([[$class: 'sshUserPrivateKey', credentialsId: 'w3af', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
+        withCredentials([[$class: 'sshUserPrivateKey', credentialsId: 'ec2-user_oc', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
           ansiblePlaybook(
-            installation: 'ansible-2.7.10',
+              // installation: 'ansible-2.7.10',
               colorized: true,
               inventory: 'hosts.ini',
               playbook: 'w3af_scan.yaml',
@@ -243,7 +243,7 @@ node {
    stage('Export WAF Policy and resolve vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
-              installation: 'ansible-2.7.10',
+                // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'removeASMWildcard.yaml',
@@ -256,7 +256,7 @@ node {
                     appName: appName
                 ])
              ansiblePlaybook(
-               installation: 'ansible-2.7.10',
+                // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'importVulnerabilities.yaml',
@@ -271,7 +271,7 @@ node {
                     buildId: "${env.BUILD_ID}"
             ])
             ansiblePlaybook(
-              installation: 'ansible-2.7.10',
+                // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'exportPolicy.yaml',
@@ -285,6 +285,7 @@ node {
                     appName: appName
                 ])
             ansiblePlaybook(
+              // installation: 'ansible-2.7.10',
                 colorized: true,
                 inventory: 'hosts.ini',
                 playbook: 'importPolicy.yaml',
