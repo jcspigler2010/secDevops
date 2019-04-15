@@ -224,8 +224,9 @@ node {
                       vulntoolip: vulntoolip,
                       wget_dataFormat: wget_dataFormat,
                       qaip: qaip,
-                      targetlogin: targetlogin,
-                      targeturl: targeturl
+                      targetlogin: targertURL,
+                      targeturl: loginURL
+
               ])
         }
 
