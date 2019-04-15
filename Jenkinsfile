@@ -237,10 +237,10 @@ node {
         // Vulnerability Assessment
         // sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
    }
-//
-   //stage('2nd Approval') {
-   //   input 'Proceed to Production?'
-   //}
+
+   stage('2nd Approval') {
+     input 'Proceed to Production?'
+   }
 
    stage('Export WAF Policy and resolve vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
