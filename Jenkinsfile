@@ -215,7 +215,7 @@ node {
               colorized: true,
               inventory: "${env.WORKSPACE}/hosts.ini",
               playbook: 'w3af_scan.yaml',
-              limit: 'qa:&$zone',
+              limit: 'w3af_servers',
               extras: '-vvv',
               sudoUser: null,
               extraVars: [

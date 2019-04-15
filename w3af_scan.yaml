@@ -1,7 +1,6 @@
 ---
   - hosts: w3af_servers
     become: true
-    become_user: root
     tasks:
 
     - name: ensure directory exists for dast profile
@@ -12,7 +11,7 @@
 
     - name: Move w3af profile file to w3af server
       copy:
-        src: ./17_dast.w3af
+        src: "./{{ build_id }}_dast.w3af"
         dest: "{{ workspace }}/{{ build_id }}_dast.xml/{{ build_id }}_dast.w3af"
         group: root
         owner: root
