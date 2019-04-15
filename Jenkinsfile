@@ -208,7 +208,7 @@ node {
         // Crawling
         //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
 
-        withCredentials([[$class: 'sshUserPrivateKey', credentialsId: 'ec2-user_oc', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'w3af', usernameVariable: 'root', keyFileVariable: 'SSH_KEY_FOR_W3AF']]) {
           ansiblePlaybook(
               installation: 'ansible-2.7.10',
               colorized: true,
