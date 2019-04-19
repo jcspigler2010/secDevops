@@ -40,8 +40,10 @@ node {
             env.targertURL = params.targetURL
             env.loginURL = params.authenticationURL
             env.method = params.method
-            env.app_user = params.usernameField
-            env.app_pass = params.passwordField
+            env.app_user = params.username
+            env.app_pass = params.password
+            env.userNameField = params.userNameField
+            env.passwordField = params.passwordField
             env.checkString = params.checkString
             env.dataFormat = params.dataFormat
             env.vulntoolip = params.vulntoolip
@@ -160,8 +162,8 @@ node {
         sh "echo set password $app_pass >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set method $method >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set auth_url https://$member/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set username_field $app_user >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set password_field $app_pass >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set username_field $userNameField >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set password_field $passwordField >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set check_url https://$member/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set check_string $checkString >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set data_format '$dataFormat' >> ${env.BUILD_ID}_dast.w3af"
