@@ -140,7 +140,7 @@ node {
           }
 
    }
-
+   
    stage('1st Approval') {
      input 'Proceed to Intensive tests in QA?'
    }
