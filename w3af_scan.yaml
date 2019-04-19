@@ -22,7 +22,7 @@
       warn: false
       with_items:
         - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' https://{{ qaip }}/{{ targetlogin }}"
-        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https:// {{ qaip }}/{{ targeturl }}"
+        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://{{ qaip }}/{{ targeturl }}"
 
     - name: Check if w3af dast profile exsists
       stat:
