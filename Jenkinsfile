@@ -18,6 +18,7 @@ import groovy.json.JsonOutput
 // }
 
 
+
 node {
    stage('Preparation') {
             checkout scm
