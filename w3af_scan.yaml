@@ -20,8 +20,8 @@
     - name: initate web crawl
       shell: '{{ item }}'
       with_items:
-        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' https://{{ member }}/DVWA/{{ targetlogin }}"
-        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://{{ member }}/DVWA/{{ targeturl }}"
+        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' http://{{ member }}/DVWA/{{ targetlogin }}"
+        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny http://{{ member }}/DVWA/{{ targeturl }}"
 
     - name: Check if w3af dast profile exsists
       stat:
