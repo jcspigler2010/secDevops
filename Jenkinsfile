@@ -84,62 +84,62 @@ node {
    //    sh "ansible-review createASMPolicy.yaml"
    // }
 //
-   stage('Build in QA') {
-            // Create LB Config
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-               ansiblePlaybook(
-                    installation: 'ansible-2.7.10',
-                    colorized: true,
-                    inventory: "${env.WORKSPACE}/hosts.ini",
-                    playbook: 'importCrypto.yaml',
-                    limit: 'qa:&$zone',
-                    extras: '-vvv',
-                    sudoUser: null,
-                    extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName
-                ])
-            }
-
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-              ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'myVSConfig.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName,
-                        vsIP: qaIP,
-                        member: member
-              ])
-            }
-
-          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'createASMPolicy.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName
-                ])
-          }
-
-   }
+   // stage('Build in QA') {
+   //          // Create LB Config
+   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //             ansiblePlaybook(
+   //                  installation: 'ansible-2.7.10',
+   //                  colorized: true,
+   //                  inventory: "${env.WORKSPACE}/hosts.ini",
+   //                  playbook: 'importCrypto.yaml',
+   //                  limit: 'qa:&$zone',
+   //                  extras: '-vvv',
+   //                  sudoUser: null,
+   //                  extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName
+   //              ])
+   //          }
+   //
+   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //            ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'myVSConfig.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName,
+   //                      vsIP: qaIP,
+   //                      member: member
+   //            ])
+   //          }
+   //
+   //        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //          ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'createASMPolicy.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName
+   //              ])
+   //        }
+   //
+   // }
 
    stage('1st Approval') {
      input 'Proceed to Intensive tests in QA?'
