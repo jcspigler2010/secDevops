@@ -20,7 +20,7 @@ import groovy.json.JsonOutput
 
 node {
    stage('Preparation') {
-            git 'https://github.com/jcspigler2010/secDevops.git'
+            checkout scm
 
             // Setting up environment variables
             echo "setting up variables..."
@@ -50,10 +50,6 @@ node {
             env.qaIP = params.qaIP
             env.prodIP = params.prodIP
 
-            // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            //     env.userIPAM = USERNAME
-            //     env.passIPAM = PASSWORD
-            // }
    }
 
    stage('certificate validation') {
@@ -88,27 +84,6 @@ node {
    // }
 //
    stage('Build in QA') {
-            // Request IP Address for IPAM
-            // withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'ipam', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            //   ansiblePlaybook(
-            //     colorized: true,
-            //     inventory: 'hosts.ini',
-            //     playbook: 'getIP.yaml',
-            //     limit: 'ipam',
-            //     extras: '-vvv',
-            //     sudoUser: null,
-            //     extraVars: [
-            //             user: USERNAME,
-            //             password: PASSWORD,
-            //             fqdn: fqdn,
-            //             outputFile: "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip",
-            //             member: member
-            //   ])
-            // }
-
-            // Record the VS IP Address
-            // env.qaIP = readFile "${env.WORKSPACE}/${appName}_qa_${env.BUILD_ID}.ip"
-
             // Create LB Config
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
                ansiblePlaybook(
@@ -206,19 +181,16 @@ node {
 
    stage('Crawling & Vulnerability Scan') {
         // Crawling
-        //sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_crawl.w3af"
-
-        withCredentials(bindings: [sshUserPrivateKey(credentialsId: 'w3af', \
-        keyFileVariable: 'SSH_KEY_FOR_W3AF', \
-         usernameVariable: 'SSH_KEY_USER_FOR_W3AF')]) {
           ansiblePlaybook(
               installation: 'ansible-2.7.10',
               colorized: true,
-              inventory: "${env.WORKSPACE}/hosts.ini",
+              inventory: "hosts.ini",
               playbook: 'w3af_scan.yaml',
               limit: 'w3af_servers',
               extras: '-vvv',
-              sudoUser: null,
+              credentialsId: 'w3af',
+              become: true,
+              disableHostKeyChecking: true,
               extraVars: [
                       workspace: "${env.WORKSPACE}",
                       build_id: "${env.BUILD_ID}",
@@ -227,16 +199,7 @@ node {
                       qaip: qaip,
                       targetlogin: targertURL,
                       targeturl: loginURL
-
               ])
-        }
-
-        //
-        // sh "wget --no-check-certificate --bind-address=10.1.3.254 --keep-session-cookies --save-cookies cookies.txt --post-data '$wget_dataFormat' https://$qaIP$loginURL"
-        // sh "wget --no-check-certificate --bind-address=10.1.3.254 --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny https://$qaIP$targetURL"
-
-        // Vulnerability Assessment
-        // sh "/opt/w3af/w3af_console --no-update -s ${env.BUILD_ID}_dast.w3af"
    }
 
    stage('2nd Approval') {
