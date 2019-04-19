@@ -182,25 +182,24 @@ node {
 
    stage('Crawling & Vulnerability Scan') {
         // Crawling now
-          ansiblePlaybook(
-              installation: 'ansible-2.7.10',
-              colorized: true,
-              inventory: "hosts.ini",
-              playbook: 'w3af_scan.yaml',
-              limit: 'w3af_servers',
-              extras: '-vvv',
-              credentialsId: 'w3af',
-              become: true,
-              disableHostKeyChecking: true,
-              extraVars: [
-                      workspace: "${env.WORKSPACE}",
-                      build_id: "${env.BUILD_ID}",
-                      vulntoolip: vulntoolip,
-                      wget_dataFormat: wget_dataFormat,
-                      qaip: qaip,
-                      targetlogin: targertURL,
-                      targeturl: loginURL
-              ])
+        ansiblePlaybook(
+          installation: 'ansible-2.7.10',
+          credentialsId: 'w3af',
+          inventory: "hosts.ini",
+          become: true,
+          playbook: "w3af_scan.yaml",
+          disableHostKeyChecking: true,
+          colorized: true,
+          limit: 'w3af_servers',
+          extraVars: [
+                  workspace: "${env.WORKSPACE}",
+                  build_id: "${env.BUILD_ID}",
+                  vulntoolip: vulntoolip,
+                  wget_dataFormat: wget_dataFormat,
+                  qaip: qaip,
+                  targetlogin: targertURL,
+                  targeturl: loginURL
+          ])
    }
 
    stage('2nd Approval') {
