@@ -140,7 +140,7 @@ node {
           }
 
    }
-   
+
    stage('1st Approval') {
      input 'Proceed to Intensive tests in QA?'
    }
@@ -159,10 +159,10 @@ node {
         sh "echo set username $app_user >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set password $app_pass >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set method $method >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set auth_url https://$qaIP/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set auth_url https://$member/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set username_field $app_user >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set password_field $app_pass >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set check_url https://$qaIP/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set check_url https://$member/DVWA/$loginURL >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set check_string $checkString >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set data_format '$dataFormat' >> ${env.BUILD_ID}_dast.w3af"
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
@@ -173,7 +173,7 @@ node {
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo target >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set target https://$qaIP/DVWA >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set target https://$member/DVWA >> ${env.BUILD_ID}_dast.w3af"
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo cleanup >> ${env.BUILD_ID}_dast.w3af"
         sh "echo start >> ${env.BUILD_ID}_dast.w3af"
@@ -196,7 +196,7 @@ node {
                   build_id: "${env.BUILD_ID}",
                   vulntoolip: vulntoolip,
                   wget_dataFormat: wget_dataFormat,
-                  qaip: qaip,
+                  member: member,
                   targetlogin: targertURL,
                   targeturl: loginURL
           ])
