@@ -186,9 +186,6 @@ node {
           ])
    }
 
-   stage('2nd Approval') {
-     input 'Proceed to Production?'
-   }
 
    stage('Export WAF Policy and resolve vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -251,6 +248,11 @@ node {
                 ])
         }
    }
+
+   stage('2nd Approval') {
+     input 'Proceed to Production?'
+   }
+
    stage('Create Service in Production') {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -304,7 +306,5 @@ node {
    // }
 
 
-   stage('Approval') {
-      input 'Proceed to Production?'
-   }
+
 }
