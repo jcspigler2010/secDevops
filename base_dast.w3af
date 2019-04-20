@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------------------------------------
 #Configure HTTP settings
 http-settings
-set headers_file dvwa-headers.txt
+set headers_file /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/dvwa-headers.txt
 set timeout 10
 back
 misc-settings
