@@ -135,9 +135,9 @@ node {
 
    }
 
-   stage('1st Approval') {
-     input 'Proceed to Intensive tests in QA?'
-   }
+   // stage('1st Approval') {
+   //   input 'Proceed to Intensive tests in QA?'
+   // }
 
   stage('Prepare Crawling and DAST') {
         //1. Convert the dataformat line so it can used by wget for crawling
@@ -186,9 +186,9 @@ node {
           ])
    }
 
-   stage('2nd Approval') {
-     input 'Proceed to Production?'
-   }
+   // stage('2nd Approval') {
+   //   input 'Proceed to Production?'
+   // }
 
    stage('Export WAF Policy and resolve vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
@@ -304,7 +304,7 @@ node {
    // }
 
 
-   stage('Approval') {
-      input 'Proceed to Production?'
-   }
+   // stage('Approval') {
+   //    input 'Proceed to Production?'
+   // }
 }

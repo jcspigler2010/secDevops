@@ -18,7 +18,7 @@ data:
         },
         "frontend": {
           "partition": "k8s",
-          "iapp": "/Common/appsvc_integrationv3.9.0",
+          "iapp": "/Common/f5.http",
           "iappPoolMemberTable": {
             "name": "pool__members",
             "columns": [
