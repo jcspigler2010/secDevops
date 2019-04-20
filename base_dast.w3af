@@ -4,16 +4,17 @@
 # -----------------------------------------------------------------------------------------------------------
 #Configure HTTP settings
 http-settings
-set timeout 30
+set headers_file dvwa-headers.txt
+set timeout 10
 back
 misc-settings
 set max_discovery_time 3
 back
 plugins
-audit blind_sqli, buffer_overflow, cors_origin, csrf, eval, file_upload, ldapi, lfi, os_commanding, phishing_vector, redos, response_splitting, sqli, xpath, xss, xst
+audit blind_sqli, buffer_overflow, csrf, response_splitting, sqli, xpath, xss, xst
 crawl web_spider
 crawl config web_spider
-set only_forward False
-set ignore_regex (?i)(logout|disconnect|signout|exit)+
+set only_forward True
+set ignore_regex .*logout.*
 back
 auth detailed

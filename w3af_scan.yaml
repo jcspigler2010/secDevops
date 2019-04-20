@@ -20,16 +20,9 @@
     - name: initate web crawl
       shell: '{{ item }}'
       with_items:
-        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' http://{{ member }}/DVWA/{{ targetlogin }}"
-        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny http://{{ member }}/DVWA/{{ targeturl }}"
-
-    - name: Check if w3af dast profile exsists
-      stat:
-        path: /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af
-      register: result
-
-    - name: initate vul if w3af file exists
-      shell: "/opt/w3af/w3af_console --no-update -s /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
+        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' http://{{ member }}/dvwa/{{ targetlogin }}"
+        - "wget --no-check-certificate --bind-address={{ vulntoolip }} --load-cookies cookies.txt --no-clobber --convert-links --random-wait -r -p --level 1 -E -e robots=off -U FoChromny http://{{ member }}/dvwa/{{ targeturl }}"
+        - "/opt/w3af/w3af_console --no-update -s /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
 
     - name: wait for scan to complete
       wait_for:
