@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scanner_vulnerabilities version="1555705263">
+    <vulnerability>
+        <attack_type>Other Application Attacks</attack_type>
+        <name>Unhandled error in web application</name>
+        <url>http://10.1.3.203/DVWA/dvwa/includes/DBMS/MySQL.php</url>
+        <parameter> </parameter>
+        <severity>Medium</severity>
+        <threat>Medium</threat>
+        <score>99</score>
+        <status>Pending</status>
+        <opened>no</opened>
+    </vulnerability>
+    <vulnerability>
+        <attack_type>Other Application Attacks</attack_type>
+        <name>Unhandled error in web application</name>
+        <parameter> </parameter>
+        <severity>Medium</severity>
+        <threat>Medium</threat>
+        <score>99</score>
+        <status>Pending</status>
+        <opened>no</opened>
+    </vulnerability>
+    <vulnerability>
+        <attack_type>Other Application Attacks</attack_type>
+        <name>Server header</name>
+        <parameter> </parameter>
+        <severity>Information</severity>
+        <threat>Information</threat>
+        <score>99</score>
+        <status>Pending</status>
+        <opened>no</opened>
+    </vulnerability>
+    <vulnerability>
+        <attack_type>Other Application Attacks</attack_type>
+        <name>Powered-by header</name>
+        <url>http://10.1.3.203/DVWA/dvwa/includes/DBMS/PGSQL.php</url>
+        <parameter> </parameter>
+        <severity>Information</severity>
+        <threat>Information</threat>
+        <score>99</score>
+        <status>Pending</status>
+        <opened>no</opened>
+    </vulnerability>
+</scanner_vulnerabilities>
