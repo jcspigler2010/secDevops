@@ -18,9 +18,9 @@
         mode: 0755
 
     - name: initate web crawl and Vulnerability test
-      shell: "/opt/w3af/w3af_console --no-update -s /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
+      shell: "/opt/w3af/w3af_console -s /opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
       register: ps
-      
+
     - debug: var=ps.stdout_lines
 
     - name: wait for scan to complete

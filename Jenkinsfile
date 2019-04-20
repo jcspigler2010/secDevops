@@ -155,18 +155,6 @@ node {
          ).trim()
 
         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
-
-        sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo auth config detailed >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set username $app_user >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set password $app_pass >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set method $method >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set auth_url http://$member/dvwa/$loginURL >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set username_field $userNameField >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set password_field $passwordField >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set check_url http://$member/dvwa/$loginURL >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set check_string $checkString >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo set data_format '$dataFormat' >> ${env.BUILD_ID}_dast.w3af"
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output console,xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output config xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
