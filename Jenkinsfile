@@ -55,27 +55,27 @@ node {
 
    }
 
-   stage('certificate validation') {
-        sh "echo $key > ${env.BUILD_ID}.key.tmp"
-        sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
-
-        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 1' |  awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
-        sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
-
-        // Verify if Key and Certificate modulus match
-        def cert_mod = sh (
-                script: "openssl x509 -noout -modulus -in ${appName}.cert",
-                returnStatus: true
-            ) == 0
-        def key_mod = sh (
-                script: "openssl rsa -noout -modulus -in ${appName}.key",
-                returnStatus: true
-            ) == 0
-        if( "${cert_mod}" != "${key_mod}" ) {
-            echo '[FAILURE] Failed to build'
-            currentBuild.result = 'FAILURE'
-            }
-   }
+   // stage('certificate validation') {
+   //      sh "echo $key > ${env.BUILD_ID}.key.tmp"
+   //      sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
+   //
+   //      sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 1' |  awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
+   //      sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
+   //
+   //      // Verify if Key and Certificate modulus match
+   //      def cert_mod = sh (
+   //              script: "openssl x509 -noout -modulus -in ${appName}.cert",
+   //              returnStatus: true
+   //          ) == 0
+   //      def key_mod = sh (
+   //              script: "openssl rsa -noout -modulus -in ${appName}.key",
+   //              returnStatus: true
+   //          ) == 0
+   //      if( "${cert_mod}" != "${key_mod}" ) {
+   //          echo '[FAILURE] Failed to build'
+   //          currentBuild.result = 'FAILURE'
+   //          }
+   // }
 
    // stage('Testing Ansible Playbooks') {
    //    //sh "/usr/local/bin/ansible-lint myLab.yaml"
@@ -85,67 +85,67 @@ node {
    //    sh "ansible-review importVulnerabilities.yaml"
    //    sh "ansible-review createASMPolicy.yaml"
    // }
-
-   stage('Build in QA') {
-            // Create LB Config
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-               ansiblePlaybook(
-                    installation: 'ansible-2.7.10',
-                    colorized: true,
-                    inventory: "${env.WORKSPACE}/hosts.ini",
-                    playbook: 'importCrypto.yaml',
-                    limit: 'qa:&$zone',
-                    extras: '-vvv',
-                    sudoUser: null,
-                    extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName
-                ])
-            }
-
-            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-              ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'myVSConfig.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName,
-                        vsIP: qaIP,
-                        member: member
-              ])
-            }
-
-          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'createASMPolicy.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                        bigip_username: USERNAME,
-                        bigip_password: PASSWORD,
-                        fqdn: fqdn,
-                        appName: appName
-                ])
-          }
-
-   }
-
-   stage('1st Approval') {
-     input 'Proceed to Intensive tests in QA?'
-   }
+   //
+   // stage('Build in QA') {
+   //          // Create LB Config
+   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //             ansiblePlaybook(
+   //                  installation: 'ansible-2.7.10',
+   //                  colorized: true,
+   //                  inventory: "${env.WORKSPACE}/hosts.ini",
+   //                  playbook: 'importCrypto.yaml',
+   //                  limit: 'qa:&$zone',
+   //                  extras: '-vvv',
+   //                  sudoUser: null,
+   //                  extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName
+   //              ])
+   //          }
+   //
+   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //            ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'myVSConfig.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName,
+   //                      vsIP: qaIP,
+   //                      member: member
+   //            ])
+   //          }
+   //
+   //        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //          ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'createASMPolicy.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                      bigip_username: USERNAME,
+   //                      bigip_password: PASSWORD,
+   //                      fqdn: fqdn,
+   //                      appName: appName
+   //              ])
+   //        }
+   //
+   // }
+   //
+   // stage('1st Approval') {
+   //   input 'Proceed to Intensive tests in QA?'
+   // }
 
   stage('Prepare Crawling and DAST') {
         //1. Convert the dataformat line so it can used by wget for crawling
