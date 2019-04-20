@@ -77,14 +77,6 @@ node {
             }
    }
 
-   stage('Testing Ansible Playbooks') {
-      //sh "/usr/local/bin/ansible-lint myLab.yaml"
-      sh "ansible-review myVSConfig.yaml"
-      sh "ansible-review importPolicy.yaml"
-      sh "ansible-review exportPolicy.yaml"
-      sh "ansible-review importVulnerabilities.yaml"
-      sh "ansible-review createASMPolicy.yaml"
-   }
 
    stage('Build in QA') {
             // Create LB Config
