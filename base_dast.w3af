@@ -18,4 +18,3 @@ crawl config web_spider
 set only_forward True
 set ignore_regex .*logout.*
 back
-auth detailed
