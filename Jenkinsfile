@@ -155,7 +155,6 @@ node {
          ).trim()
 
         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output console, xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output config xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set output_file /opt/w3af/jenkins/asm_xml_results/f5_dynamic_waf/${env.BUILD_ID}_dast.xml >> ${env.BUILD_ID}_dast.w3af"
@@ -163,6 +162,7 @@ node {
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output config console >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set verbose False >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo back >> ${env.BUILD_ID}_dast.w3af"
         sh "echo target >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set target http://$member/dvwa >> ${env.BUILD_ID}_dast.w3af"
