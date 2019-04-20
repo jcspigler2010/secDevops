@@ -11,7 +11,7 @@ misc-settings
 set max_discovery_time 3
 back
 plugins
-audit xss, blind_sqli, xpath
+audit xss, blind_sqli
 #audit blind_sqli, buffer_overflow, csrf, response_splitting, sqli, xpath, xss, xst
 crawl web_spider
 crawl config web_spider

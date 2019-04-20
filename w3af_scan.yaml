@@ -17,7 +17,7 @@
         owner: root
         mode: 0755
 
-    - name: initate web crawl
+    - name: initate web crawl and Vulnerability test
       shell: '{{ item }}'
       with_items:
         - "wget --no-check-certificate --bind-address={{ vulntoolip }} --keep-session-cookies --save-cookies cookies.txt --post-data '{{ wget_dataFormat }}' http://{{ member }}/dvwa/{{ targetlogin }}"
@@ -26,7 +26,7 @@
 
     - name: wait for scan to complete
       wait_for:
-        path: "/opt/w3af/jenkins/dast_profiles/f5_dynamic_waf/{{ build_id }}_dast.w3af"
+        path: "/opt/w3af/jenkins/asm_xml_results/f5_dynamic_waf/{{ build_id }}_dast.xml"
 
     - name: ensure directory exists for xml output
       file:
