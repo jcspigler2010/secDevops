@@ -1,8 +1,7 @@
 ---
 - name: Export an ASM Policy and write it locally to an XML file
-  hosts: all
+  hosts: test
   connection: local
-
   tasks:
       - name: include Variables
         include_vars: 'myVariables.yaml'
@@ -15,7 +14,7 @@
             policyName: "{{ appName }}_asm"
             validate_certs: "{{ validate_certs }}"
         register: policyId
-#        no_log: true
+        no_log: true
 
       - name: EXPORT POLICY
         f5_asm_exportPolicy:
@@ -41,7 +40,11 @@
         register: myStatus
         until: myStatus.taskStatus | default("COMPLETED")== "COMPLETED"
         retries: 10
-        delay: 5
+        delay: 10
+
+      - name: wait for a second
+        pause:
+          seconds: 10
 
       - name: GET EXPORTED POLICY
         f5_asm_getExportedPolicy:

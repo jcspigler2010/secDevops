@@ -1,4 +1,0 @@
----
-  - name: import ASM policy
-    hosts: all
-    connection: local
