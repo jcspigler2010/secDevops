@@ -9,6 +9,12 @@
         recurse=yes
         state=directory
 
+    - name: ensure directory exists for xml output
+      file:
+        path=/opt/w3af/jenkins/asm_xml_results/f5_dynamic_waf
+        recurse=yes
+        state=directory
+
     - name: Move w3af profile file to w3af server
       copy:
         src: "./{{ build_id }}_dast.w3af"
