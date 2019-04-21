@@ -135,7 +135,7 @@ node {
 
    }
 
-   stage('1st Approval') {
+   stage('QA Tests') {
      input 'Proceed to Intensive tests in QA?'
    }
 
@@ -217,45 +217,46 @@ node {
                     appName: appName,
                     buildId: "${env.BUILD_ID}"
             ])
-            ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'exportPolicy.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                    bigip_username: USERNAME,
-                    bigip_password: PASSWORD,
-                    fqdn: fqdn,
-                    appName: appName
-                ])
-            ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'importPolicy.yaml',
-                limit: 'prod:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                    host: 'prod:&$zone',
-                    bigip_username: USERNAME,
-                    bigip_password: PASSWORD,
-                    fqdn: fqdn,
-                    appName: appName
-                ])
         }
    }
 
-   stage('2nd Approval') {
-     input 'Proceed to Production?'
+   stage('Vulnerability Tool Findings Approval') {
+     input 'Approve Vulnerability Test Updates Export from QA and Import into Production?'
    }
 
    stage('Create Service in Production') {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+
+              ansiblePlaybook(
+                  installation: 'ansible-2.7.10',
+                  colorized: true,
+                  inventory: "${env.WORKSPACE}/hosts.ini",
+                  playbook: 'exportPolicy.yaml',
+                  limit: 'qa:&$zone',
+                  extras: '-vvv',
+                  sudoUser: null,
+                  extraVars: [
+                      bigip_username: USERNAME,
+                      bigip_password: PASSWORD,
+                      fqdn: fqdn,
+                      appName: appName
+                  ])
+              ansiblePlaybook(
+                  installation: 'ansible-2.7.10',
+                  colorized: true,
+                  inventory: "${env.WORKSPACE}/hosts.ini",
+                  playbook: 'importPolicy.yaml',
+                  limit: 'prod:&$zone',
+                  extras: '-vvv',
+                  sudoUser: null,
+                  extraVars: [
+                      host: 'prod:&$zone',
+                      bigip_username: USERNAME,
+                      bigip_password: PASSWORD,
+                      fqdn: fqdn,
+                      appName: appName
+                  ])
                ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
@@ -270,6 +271,13 @@ node {
                         fqdn: fqdn,
                         appName: appName
                 ])
+
+
+                steps('Publish In Production'){
+
+                  input 'Create Virtual Server and Attach ASM Policy in Production?'
+
+                }
                 ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
