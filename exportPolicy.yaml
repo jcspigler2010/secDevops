@@ -1,6 +1,6 @@
 ---
 - name: Export an ASM Policy and write it locally to an XML file
-  hosts: test
+  hosts: all
   connection: local
   tasks:
       - name: include Variables
