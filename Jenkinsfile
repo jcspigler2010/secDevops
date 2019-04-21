@@ -242,6 +242,7 @@ node {
                       bigip_username: USERNAME,
                       bigip_password: PASSWORD,
                       fqdn: fqdn,
+                      build_id: "${env.BUILD_ID}",
                       appName: appName
                   ])
               ansiblePlaybook(
@@ -257,6 +258,7 @@ node {
                       bigip_username: USERNAME,
                       bigip_password: PASSWORD,
                       fqdn: fqdn,
+                      build_id: "${env.BUILD_ID}",
                       appName: appName
                   ])
                ansiblePlaybook(

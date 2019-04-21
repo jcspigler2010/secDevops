@@ -10,7 +10,7 @@
       - name: UPLOAD XML ASM POLICY...
         f5_uploadFile:
             server: "{{ inventory_hostname }}"
-            fileName: "{{ appName }}_asm.xml"
+            fileName: "{{ appName }}_asm_{{ build_id }}.xml"
             fileType: "policy"
             user: "{{ bigip_username }}"
             password: "{{ bigip_password }}"
@@ -22,7 +22,7 @@
         f5_asm_importPolicy:
             server: "{{ inventory_hostname }}"
             serviceName: "{{ appName }}"
-            fileName: "{{ appName }}_asm.xml"
+            fileName: "{{ appName }}_asm_{{ build_id }}.xml"
             targetPolicy: "asm_tested_{{ appName }}"
             user: "{{ bigip_username }}"
             password: "{{ bigip_password }}"

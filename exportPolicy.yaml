@@ -20,7 +20,7 @@
       - name: EXPORT POLICY
         f5_asm_exportPolicy:
             server: "{{ inventory_hostname }}"
-            serviceName: "{{ appName }}_asm"
+            serviceName: "{{ appName }}_asm_{{ build_id }}"
             policyId: "{{policyId.policyId}}"
             user: "{{ bigip_username }}"
             password: "{{ bigip_password }}"
@@ -46,7 +46,7 @@
       - name: GET EXPORTED POLICY
         f5_asm_getExportedPolicy:
             server: "{{ inventory_hostname }}"
-            serviceName: "{{ appName }}_asm"
+            serviceName: "{{ appName }}_asm_{{ build_id }}"
             user: "{{ bigip_username }}"
             password: "{{ bigip_password }}"
             validate_certs: "{{ validate_certs }}"
