@@ -22,7 +22,7 @@
         f5_asm_importPolicy:
             server: "{{ inventory_hostname }}"
             serviceName: "{{ appName }}"
-            fileName: "{{ appName }}_asm_{{ build_id }}.xml"
+            fileName: "myExample_template.xml"
             targetPolicy: "asm_tested_{{ appName }}"
             user: "{{ bigip_username }}"
             password: "{{ bigip_password }}"
