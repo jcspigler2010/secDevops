@@ -54,7 +54,7 @@ node {
             env.prodIP = params.prodIP
 
    }
-   // 
+   //
    // stage('certificate validation') {
    //      sh "echo $key > ${env.BUILD_ID}.key.tmp"
    //      sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
@@ -138,6 +138,8 @@ node {
    // stage('QA Tests') {
    //   input 'Proceed to Intensive tests in QA?'
    // }
+
+
 
   stage('Prepare Crawling and DAST') {
         //1. Convert the dataformat line so it can used by wget for crawling
