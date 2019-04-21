@@ -187,7 +187,7 @@ node {
    }
 
 
-   stage('Export WAF Policy and resolve vulnerabilities') {
+   stage('Import Vulnerabilities') {
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
             ansiblePlaybook(
                 installation: 'ansible-2.7.10',
@@ -220,8 +220,8 @@ node {
         }
    }
 
-   stage('Vulnerability Tool Findings Approval') {
-     input 'Approve Vulnerability Test Updates Export from QA and Import into Production?'
+   stage('Move to Production') {
+     input 'Approve Vulnerability Test Updates in ASM Policy and Publish Service in Production?'
    }
 
    stage('Create Service in Production') {
@@ -272,12 +272,6 @@ node {
                         appName: appName
                 ])
 
-
-                steps('Publish In Production'){
-
-                  input 'Create Virtual Server and Attach ASM Policy in Production?'
-
-                }
                 ansiblePlaybook(
                     installation: 'ansible-2.7.10',
                     colorized: true,
