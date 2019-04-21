@@ -220,7 +220,7 @@ node {
         }
    }
 
-   stage('Move to Production') {
+   stage('Move to Production and Approve Vulnerability Test Updates') {
      input 'Approve Vulnerability Test Updates in ASM Policy and Publish Service in Production?'
    }
 
