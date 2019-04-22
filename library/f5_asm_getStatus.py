@@ -46,8 +46,8 @@ class BigIpRest(BigIpCommon):
     def run(self):
         taskStatus = ""
         resp = requests.get(self._uri,
-            auth=(self._username, self._password),
-            verify=self._validate_certs)
+                            auth=(self._username, self._password),
+                            verify=self._validate_certs)
 
 
         if resp.status_code == 200:
