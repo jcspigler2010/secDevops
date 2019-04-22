@@ -1,0 +1,16 @@
+### Steps to show demo###
+
+1. Start video
+2. Show both F5 instances
+3. Show no virtual servers asm profiles or ssl profiles
+4. show Dvwa
+5. log into jenkins and high level what youre seeing
+6. build with parameters slowly show each parameter and explain
+7. launch build with parameters
+8. explain whats happening in background
+9. show created VS, ssl profile, and asm profile before proceeding onto vul tests
+10. explain first approval step 'Intensive Tests in QA' and that this a basic step which can be much more integrated into other change management systems
+11. explain what is happening in the background (speed up video)
+12. after scan is complete, look at discovered vuls
+13. apply asm policy
+14. accept move into production 
