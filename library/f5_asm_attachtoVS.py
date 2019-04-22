@@ -81,10 +81,10 @@ class BigIpRest(BigIpCommon):
 
                 updatedPayload = { "virtualServers": vsList }
                 resp = requests.patch(self._uri,
-                headers=self._headers,
-                auth=(self._username, self._password),
-                data=json.dumps(updatedPayload),
-                verify=self._validate_certs)
+                                     headers=self._headers,
+                                     auth=(self._username, self._password),
+                                     data=json.dumps(updatedPayload),
+                                     verify=self._validate_certs)
 
 
 
@@ -92,7 +92,7 @@ class BigIpRest(BigIpCommon):
                 changed = True
             else:
                     res = resp.json()
-                #    raise Exception(res['message'])
+                    raise Exception(res['message'])
             return changed
 
 
