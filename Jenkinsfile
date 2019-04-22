@@ -27,7 +27,7 @@ node {
             echo "setting up variables..."
             env.zone = params.zones
             env.fqdn = params.fqdn
-            env.domain = fqdn.split('.').last(2).join('.')
+            // env.domain = fqdn.split('.').last(2).join('.')
             env.appName = params.appName
             env.member = params.member
 
@@ -165,7 +165,7 @@ node {
 
         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
         sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
-        sh "echo auth config detailed"
+        sh "echo auth config detailed >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set username admin >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set password password >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set method POST >> ${env.BUILD_ID}_dast.w3af"
