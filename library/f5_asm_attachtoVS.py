@@ -88,12 +88,12 @@ class BigIpRest(BigIpCommon):
 
 
 
-            if resp.status_code == 201:
-                changed = True
-            else:
-                    res = resp.json()
-                    raise Exception(res['message'])
-            return changed
+                if resp.status_code == 201:
+                    changed = True
+                else:
+                        res = resp.json()
+                        raise Exception(res['message'])
+                return changed
 
 
 def main():
