@@ -92,7 +92,7 @@ class BigIpRest(BigIpCommon):
                 changed = True
             else:
                     res = resp.json()
-                    raise Exception(res['message'])
+                #    raise Exception(res['message'])
             return changed
 
 
