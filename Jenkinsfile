@@ -27,7 +27,7 @@ node {
             echo "setting up variables..."
             env.zone = params.zones
             env.fqdn = params.fqdn
-           // env.domain = fqdn.split('.').last(2).join('.')
+            env.domain = fqdn.split('.').last(2).join('.')
             env.appName = params.appName
             env.member = params.member
 
@@ -78,62 +78,62 @@ node {
    }
 
 
-   // stage('Build in QA') {
-   //          // Create LB Config
-   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-   //             ansiblePlaybook(
-   //                  installation: 'ansible-2.7.10',
-   //                  colorized: true,
-   //                  inventory: "${env.WORKSPACE}/hosts.ini",
-   //                  playbook: 'importCrypto.yaml',
-   //                  limit: 'qa:&$zone',
-   //                  extras: '-vvv',
-   //                  sudoUser: null,
-   //                  extraVars: [
-   //                      bigip_username: USERNAME,
-   //                      bigip_password: PASSWORD,
-   //                      fqdn: fqdn,
-   //                      appName: appName
-   //              ])
-   //          }
-   //
-   //          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-   //            ansiblePlaybook(
-   //              installation: 'ansible-2.7.10',
-   //              colorized: true,
-   //              inventory: "${env.WORKSPACE}/hosts.ini",
-   //              playbook: 'myVSConfig.yaml',
-   //              limit: 'qa:&$zone',
-   //              extras: '-vvv',
-   //              sudoUser: null,
-   //              extraVars: [
-   //                      bigip_username: USERNAME,
-   //                      bigip_password: PASSWORD,
-   //                      fqdn: fqdn,
-   //                      appName: appName,
-   //                      vsIP: qaIP,
-   //                      member: member
-   //            ])
-   //          }
-   //
-   //        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-   //          ansiblePlaybook(
-   //              installation: 'ansible-2.7.10',
-   //              colorized: true,
-   //              inventory: "${env.WORKSPACE}/hosts.ini",
-   //              playbook: 'createASMPolicy.yaml',
-   //              limit: 'qa:&$zone',
-   //              extras: '-vvv',
-   //              sudoUser: null,
-   //              extraVars: [
-   //                      bigip_username: USERNAME,
-   //                      bigip_password: PASSWORD,
-   //                      fqdn: fqdn,
-   //                      appName: appName
-   //              ])
-   //        }
-   //
-   // }
+   stage('Build in QA') {
+            // Create LB Config
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+               ansiblePlaybook(
+                    installation: 'ansible-2.7.10',
+                    colorized: true,
+                    inventory: "${env.WORKSPACE}/hosts.ini",
+                    playbook: 'importCrypto.yaml',
+                    limit: 'qa:&$zone',
+                    extras: '-vvv',
+                    sudoUser: null,
+                    extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName
+                ])
+            }
+
+            withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+              ansiblePlaybook(
+                installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: "${env.WORKSPACE}/hosts.ini",
+                playbook: 'myVSConfig.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName,
+                        vsIP: qaIP,
+                        member: member
+              ])
+            }
+
+          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            ansiblePlaybook(
+                installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: "${env.WORKSPACE}/hosts.ini",
+                playbook: 'createASMPolicy.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                        bigip_username: USERNAME,
+                        bigip_password: PASSWORD,
+                        fqdn: fqdn,
+                        appName: appName
+                ])
+          }
+
+   }
 
    stage('QA Tests') {
      input 'Proceed to Intensive tests in QA?'
@@ -148,20 +148,20 @@ node {
          returnStdout: true
          ).trim()
 
-         // env.targertURL = params.targetURL
-         // env.loginURL = params.authenticationURL
-         // env.method = params.method
-         // env.app_user = params.username
-         // env.app_pass = params.password
-         // env.userNameField = params.userNameField
-         // env.passwordField = params.passwordField
-         // env.checkString = params.checkString
-         // env.dataFormat = params.dataFormat
-         // env.vulntoolip = params.vulntoolip
-         // echo "Data Format: $dataFormat"
-         // echo "Data_Format: ${dataFormat}"
-         //
-         // env.qaIP = params.qaIP
+         env.targertURL = params.targetURL
+         env.loginURL = params.authenticationURL
+         env.method = params.method
+         env.app_user = params.username
+         env.app_pass = params.password
+         env.userNameField = params.userNameField
+         env.passwordField = params.passwordField
+         env.checkString = params.checkString
+         env.dataFormat = params.dataFormat
+         env.vulntoolip = params.vulntoolip
+         echo "Data Format: $dataFormat"
+         echo "Data_Format: ${dataFormat}"
+
+         env.qaIP = params.qaIP
 
         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
         sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
@@ -192,61 +192,61 @@ node {
         sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
    }
 
-   // stage('Crawling & Vulnerability Scan') {
-   //      // Crawling now
-   //      ansiblePlaybook(
-   //        installation: 'ansible-2.7.10',
-   //        credentialsId: 'w3af',
-   //        inventory: "hosts.ini",
-   //        become: true,
-   //        playbook: "w3af_scan.yaml",
-   //        disableHostKeyChecking: true,
-   //        colorized: true,
-   //        limit: 'w3af_servers',
-   //        extraVars: [
-   //                workspace: "${env.WORKSPACE}",
-   //                build_id: "${env.BUILD_ID}",
-   //                vulntoolip: vulntoolip,
-   //                wget_dataFormat: wget_dataFormat,
-   //                member: member,
-   //                targetlogin: targertURL,
-   //                targeturl: loginURL
-   //        ])
-   // }
-   //
-   //
-   // stage('Import Vulnerabilities') {
-   //      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-   //          ansiblePlaybook(
-   //              installation: 'ansible-2.7.10',
-   //              colorized: true,
-   //              inventory: "${env.WORKSPACE}/hosts.ini",
-   //              playbook: 'removeASMWildcard.yaml',
-   //              limit: 'qa:&$zone',
-   //              extras: '-vvv',
-   //              sudoUser: null,
-   //              extraVars: [
-   //                  bigip_username: USERNAME,
-   //                  bigip_password: PASSWORD,
-   //                  appName: appName
-   //              ])
-   //           ansiblePlaybook(
-   //              installation: 'ansible-2.7.10',
-   //              colorized: true,
-   //              inventory: "${env.WORKSPACE}/hosts.ini",
-   //              playbook: 'importVulnerabilities.yaml',
-   //              limit: 'qa:&$zone',
-   //              extras: '-vvv',
-   //              sudoUser: null,
-   //              extraVars: [
-   //                  bigip_username: USERNAME,
-   //                  bigip_password: PASSWORD,
-   //                  fqdn: fqdn,
-   //                  appName: appName,
-   //                  buildId: "${env.BUILD_ID}"
-   //          ])
-   //      }
-   // }
+   stage('Crawling & Vulnerability Scan') {
+        // Crawling now
+        ansiblePlaybook(
+          installation: 'ansible-2.7.10',
+          credentialsId: 'w3af',
+          inventory: "hosts.ini",
+          become: true,
+          playbook: "w3af_scan.yaml",
+          disableHostKeyChecking: true,
+          colorized: true,
+          limit: 'w3af_servers',
+          extraVars: [
+                  workspace: "${env.WORKSPACE}",
+                  build_id: "${env.BUILD_ID}",
+                  vulntoolip: vulntoolip,
+                  wget_dataFormat: wget_dataFormat,
+                  member: member,
+                  targetlogin: targertURL,
+                  targeturl: loginURL
+          ])
+   }
+
+
+   stage('Import Vulnerabilities') {
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+            ansiblePlaybook(
+                installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: "${env.WORKSPACE}/hosts.ini",
+                playbook: 'removeASMWildcard.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    appName: appName
+                ])
+             ansiblePlaybook(
+                installation: 'ansible-2.7.10',
+                colorized: true,
+                inventory: "${env.WORKSPACE}/hosts.ini",
+                playbook: 'importVulnerabilities.yaml',
+                limit: 'qa:&$zone',
+                extras: '-vvv',
+                sudoUser: null,
+                extraVars: [
+                    bigip_username: USERNAME,
+                    bigip_password: PASSWORD,
+                    fqdn: fqdn,
+                    appName: appName,
+                    buildId: "${env.BUILD_ID}"
+            ])
+        }
+   }
 
    stage('Move to Production and Approve Vulnerability Test Updates') {
      input 'Approve Vulnerability Test Updates in ASM Policy and Publish Service in Production?'
@@ -256,21 +256,21 @@ node {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
-              // ansiblePlaybook(
-              //     installation: 'ansible-2.7.10',
-              //     colorized: true,
-              //     inventory: "${env.WORKSPACE}/hosts.ini",
-              //     playbook: 'exportPolicy.yaml',
-              //     limit: 'qa:&$zone',
-              //     extras: '-vvv',
-              //     sudoUser: null,
-              //     extraVars: [
-              //         bigip_username: USERNAME,
-              //         bigip_password: PASSWORD,
-              //         fqdn: fqdn,
-              //         build_id: "${env.BUILD_ID}",
-              //         appName: appName
-              //     ])
+              ansiblePlaybook(
+                  installation: 'ansible-2.7.10',
+                  colorized: true,
+                  inventory: "${env.WORKSPACE}/hosts.ini",
+                  playbook: 'exportPolicy.yaml',
+                  limit: 'qa:&$zone',
+                  extras: '-vvv',
+                  sudoUser: null,
+                  extraVars: [
+                      bigip_username: USERNAME,
+                      bigip_password: PASSWORD,
+                      fqdn: fqdn,
+                      build_id: "${env.BUILD_ID}",
+                      appName: appName
+                  ])
               ansiblePlaybook(
                   installation: 'ansible-2.7.10',
                   colorized: true,
@@ -333,7 +333,7 @@ node {
                 ])
             }
    }
-   
+
    // stage("Post to Slack") {
    //      notifySlack("A new service is deployed!", slackNotificationChannel, [])
    // }
