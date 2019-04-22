@@ -192,61 +192,61 @@ node {
         sh "echo exit >> ${env.BUILD_ID}_dast.w3af"
    }
 
-   stage('Crawling & Vulnerability Scan') {
-        // Crawling now
-        ansiblePlaybook(
-          installation: 'ansible-2.7.10',
-          credentialsId: 'w3af',
-          inventory: "hosts.ini",
-          become: true,
-          playbook: "w3af_scan.yaml",
-          disableHostKeyChecking: true,
-          colorized: true,
-          limit: 'w3af_servers',
-          extraVars: [
-                  workspace: "${env.WORKSPACE}",
-                  build_id: "${env.BUILD_ID}",
-                  vulntoolip: vulntoolip,
-                  wget_dataFormat: wget_dataFormat,
-                  member: member,
-                  targetlogin: targertURL,
-                  targeturl: loginURL
-          ])
-   }
-
-
-   stage('Import Vulnerabilities') {
-        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-            ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'removeASMWildcard.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                    bigip_username: USERNAME,
-                    bigip_password: PASSWORD,
-                    appName: appName
-                ])
-             ansiblePlaybook(
-                installation: 'ansible-2.7.10',
-                colorized: true,
-                inventory: "${env.WORKSPACE}/hosts.ini",
-                playbook: 'importVulnerabilities.yaml',
-                limit: 'qa:&$zone',
-                extras: '-vvv',
-                sudoUser: null,
-                extraVars: [
-                    bigip_username: USERNAME,
-                    bigip_password: PASSWORD,
-                    fqdn: fqdn,
-                    appName: appName,
-                    buildId: "${env.BUILD_ID}"
-            ])
-        }
-   }
+   // stage('Crawling & Vulnerability Scan') {
+   //      // Crawling now
+   //      ansiblePlaybook(
+   //        installation: 'ansible-2.7.10',
+   //        credentialsId: 'w3af',
+   //        inventory: "hosts.ini",
+   //        become: true,
+   //        playbook: "w3af_scan.yaml",
+   //        disableHostKeyChecking: true,
+   //        colorized: true,
+   //        limit: 'w3af_servers',
+   //        extraVars: [
+   //                workspace: "${env.WORKSPACE}",
+   //                build_id: "${env.BUILD_ID}",
+   //                vulntoolip: vulntoolip,
+   //                wget_dataFormat: wget_dataFormat,
+   //                member: member,
+   //                targetlogin: targertURL,
+   //                targeturl: loginURL
+   //        ])
+   // }
+   //
+   //
+   // stage('Import Vulnerabilities') {
+   //      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+   //          ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'removeASMWildcard.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                  bigip_username: USERNAME,
+   //                  bigip_password: PASSWORD,
+   //                  appName: appName
+   //              ])
+   //           ansiblePlaybook(
+   //              installation: 'ansible-2.7.10',
+   //              colorized: true,
+   //              inventory: "${env.WORKSPACE}/hosts.ini",
+   //              playbook: 'importVulnerabilities.yaml',
+   //              limit: 'qa:&$zone',
+   //              extras: '-vvv',
+   //              sudoUser: null,
+   //              extraVars: [
+   //                  bigip_username: USERNAME,
+   //                  bigip_password: PASSWORD,
+   //                  fqdn: fqdn,
+   //                  appName: appName,
+   //                  buildId: "${env.BUILD_ID}"
+   //          ])
+   //      }
+   // }
 
    stage('Move to Production and Approve Vulnerability Test Updates') {
      input 'Approve Vulnerability Test Updates in ASM Policy and Publish Service in Production?'
@@ -256,21 +256,21 @@ node {
 
             withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'bigips', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
-              ansiblePlaybook(
-                  installation: 'ansible-2.7.10',
-                  colorized: true,
-                  inventory: "${env.WORKSPACE}/hosts.ini",
-                  playbook: 'exportPolicy.yaml',
-                  limit: 'qa:&$zone',
-                  extras: '-vvv',
-                  sudoUser: null,
-                  extraVars: [
-                      bigip_username: USERNAME,
-                      bigip_password: PASSWORD,
-                      fqdn: fqdn,
-                      build_id: "${env.BUILD_ID}",
-                      appName: appName
-                  ])
+              // ansiblePlaybook(
+              //     installation: 'ansible-2.7.10',
+              //     colorized: true,
+              //     inventory: "${env.WORKSPACE}/hosts.ini",
+              //     playbook: 'exportPolicy.yaml',
+              //     limit: 'qa:&$zone',
+              //     extras: '-vvv',
+              //     sudoUser: null,
+              //     extraVars: [
+              //         bigip_username: USERNAME,
+              //         bigip_password: PASSWORD,
+              //         fqdn: fqdn,
+              //         build_id: "${env.BUILD_ID}",
+              //         appName: appName
+              //     ])
               ansiblePlaybook(
                   installation: 'ansible-2.7.10',
                   colorized: true,
