@@ -73,7 +73,7 @@ class BigIpRest(BigIpCommon):
         rmURI = 'https://%s/mgmt/tm/asm/policies/%s/%s/%s' % (self._hostname, self._policyId, self._entity, current)
 
         resp = requests.delete(rmURI,
-        	    headers=self._headers,
+                            headers=self._headers,
                             auth=(self._username, self._password),
                             data=json.dumps(self._payload),
                             verify=self._validate_certs)
