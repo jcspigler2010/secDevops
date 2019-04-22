@@ -148,7 +148,33 @@ node {
          returnStdout: true
          ).trim()
 
+         // env.targertURL = params.targetURL
+         // env.loginURL = params.authenticationURL
+         // env.method = params.method
+         // env.app_user = params.username
+         // env.app_pass = params.password
+         // env.userNameField = params.userNameField
+         // env.passwordField = params.passwordField
+         // env.checkString = params.checkString
+         // env.dataFormat = params.dataFormat
+         // env.vulntoolip = params.vulntoolip
+         // echo "Data Format: $dataFormat"
+         // echo "Data_Format: ${dataFormat}"
+         //
+         // env.qaIP = params.qaIP
+
         sh "cat base_dast.w3af >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo auth detailed >> ${env.BUILD_ID}_dast.w3af"
+        sh "auth config detailed"
+        sh "echo set username admin >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set password password >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set method POST >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set auth_url http://${env.qaIP}/DVWA/${env.loginURL}>> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set username_field ${env.userNameField} >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set password_field ${env.passwordField} >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set check_url http://${env.qaIP}/DVWA/${env.targertURL} >> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set check_string 'admin'>> ${env.BUILD_ID}_dast.w3af"
+        sh "echo set data_format $dataFormat >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output console, xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
         sh "echo output config xml_f5asm >> ${env.BUILD_ID}_dast.w3af"
         sh "echo set output_file /opt/w3af/jenkins/asm_xml_results/f5_dynamic_waf/${env.BUILD_ID}_dast.xml >> ${env.BUILD_ID}_dast.w3af"
