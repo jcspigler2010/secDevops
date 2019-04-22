@@ -55,27 +55,27 @@ node {
 
    }
 
-   // stage('certificate validation') {
-   //      sh "echo $key > ${env.BUILD_ID}.key.tmp"
-   //      sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
-   //
-   //      sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 1' |  awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
-   //      sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
-   //
-   //      // Verify if Key and Certificate modulus match
-   //      def cert_mod = sh (
-   //              script: "openssl x509 -noout -modulus -in ${appName}.cert",
-   //              returnStatus: true
-   //          ) == 0
-   //      def key_mod = sh (
-   //              script: "openssl rsa -noout -modulus -in ${appName}.key",
-   //              returnStatus: true
-   //          ) == 0
-   //      if( "${cert_mod}" != "${key_mod}" ) {
-   //          echo '[FAILURE] Failed to build'
-   //          currentBuild.result = 'FAILURE'
-   //          }
-   // }
+   stage('certificate validation') {
+        sh "echo $key > ${env.BUILD_ID}.key.tmp"
+        sh "echo $cert > ${env.BUILD_ID}.cert.tmp"
+
+        sh "cat ${env.BUILD_ID}.key.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/RSA\$/ { printf(\"%s \", \$0); next } 1' |  awk '/PRIVATE\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.key"
+        sh "cat ${env.BUILD_ID}.cert.tmp | tr ' ' '\n' | awk '/BEGIN\$/ { printf(\"%s \", \$0); next } 1' | awk '/END\$/ { printf(\"%s \", \$0); next } 1' |  tee -a ${appName}.cert"
+
+        // Verify if Key and Certificate modulus match
+        def cert_mod = sh (
+                script: "openssl x509 -noout -modulus -in ${appName}.cert",
+                returnStatus: true
+            ) == 0
+        def key_mod = sh (
+                script: "openssl rsa -noout -modulus -in ${appName}.key",
+                returnStatus: true
+            ) == 0
+        if( "${cert_mod}" != "${key_mod}" ) {
+            echo '[FAILURE] Failed to build'
+            currentBuild.result = 'FAILURE'
+            }
+   }
 
 
    // stage('Build in QA') {
