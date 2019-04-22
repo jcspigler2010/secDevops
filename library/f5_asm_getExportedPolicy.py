@@ -68,13 +68,13 @@ def main():
 
     module = AnsibleModule(
        argument_spec=dict(
-        server=dict(required=True),
-        partition=dict(default='Common'),
-        name=dict(default=''),
-        user=dict(required=True, aliases=['username']),
-        password=dict(required=True),
-        serviceName=dict(required=True),
-        validate_certs=dict(default='no', type='bool')
+            server=dict(required=True),
+            partition=dict(default='Common'),
+            name=dict(default=''),
+            user=dict(required=True, aliases=['username']),
+            password=dict(required=True),
+            serviceName=dict(required=True),
+            validate_certs=dict(default='no', type='bool')
         )
     )
 

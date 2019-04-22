@@ -83,7 +83,7 @@ def main():
     if taskStatus != "":
         changed = True
 
-        module.exit_json(changed=changed, taskStatus=taskStatus)
+    module.exit_json(changed=changed, taskStatus=taskStatus)
 
 
 from ansible.module_utils.basic import *

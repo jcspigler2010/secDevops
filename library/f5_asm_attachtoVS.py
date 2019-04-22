@@ -77,23 +77,23 @@ class BigIpRest(BigIpCommon):
             vsList = []
             for n in current:
                 vsList.append(n)
-                vsList.append("/" + self._partition + "/" + self._virtual)
+            vsList.append("/" + self._partition + "/" + self._virtual)
 
-                updatedPayload = { "virtualServers": vsList }
-                resp = requests.patch(self._uri,
-                                     headers=self._headers,
-                                     auth=(self._username, self._password),
-                                     data=json.dumps(updatedPayload),
-                                     verify=self._validate_certs)
+            updatedPayload = { "virtualServers": vsList }
+            resp = requests.patch(self._uri,
+                                 headers=self._headers,
+                                 auth=(self._username, self._password),
+                                 data=json.dumps(updatedPayload),
+                                 verify=self._validate_certs)
 
 
 
-                if resp.status_code == 201:
-                    changed = True
-                else:
-                        res = resp.json()
-                        raise Exception(res['message'])
-                return changed
+            if resp.status_code == 201:
+                changed = True
+            else:
+                    res = resp.json()
+                    raise Exception(res['message'])
+            return changed
 
 
 def main():
