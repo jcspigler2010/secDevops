@@ -2,7 +2,7 @@ kind: ConfigMap
 apiVersion: v1
 metadata:
   name: k8s.http
-  namespace: dvws
+  namespace: f5demo
   labels:
     f5type: virtual-server
 data:
@@ -13,7 +13,7 @@ data:
     {
       "virtualServer": {
         "backend": {
-          "serviceName": "myService",
+          "serviceName": "f5-hello-world",
           "servicePort": 80
         },
         "frontend": {
@@ -40,7 +40,7 @@ data:
             "iapp_asmDeployMode":"preserve-bypass",
             "iapp_asmDeployMode":"preserve-bypass",
             "pool__DefaultPoolIndex": "0",
-            "pool__MemberDefaultPort": 80,
+            "pool__MemberDefaultPort": 8080,
             "vs__RouteAdv":"disabled",
             "vs__SourceAddress":"0.0.0.0/0",
             "vs__ipProtocol":"tcp",
