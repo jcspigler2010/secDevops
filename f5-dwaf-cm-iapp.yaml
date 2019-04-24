@@ -14,7 +14,7 @@ data:
       "virtualServer": {
         "backend": {
           "serviceName": "f5-hello-world",
-          "servicePort": 80
+          "servicePort": 8080
         },
         "frontend": {
           "partition": "k8s",
@@ -68,8 +68,8 @@ data:
             "vs__ProfileCompression":"/Common/httpcompression",
             "vs__ProfileDefaultPersist":"/Common/cookie",
             "vs__ProfileFallbackPersist":"/Common/source_addr",
-            "vs__ProfileClientSSLCert":"",
-            "vs__ProfileClientSSLKey":"",
+            "vs__ProfileClientSSLCert":"/Common/default.cert",
+            "vs__ProfileClientSSLKey":"/Common/default.key",
             "vs__ProfileClientSSLCipherString":"DEFAULT",
             "vs__ProfileClientSSLadvOptions":"handshake-timeout=60;strict-resume=enabled",
             "pool_addr":"1.1.1.1",
